@@ -1,0 +1,13 @@
+<div class='year-nav'>
+	{{#each doc.nav}}
+	<div class='decade-wrapper'>
+		<p class='decade tk-atlas'>{{decade}}s</p>
+		<div class='dots'></div>
+	</div>
+	{{#if @last}}
+		<div class='decade-wrapper'>
+			<p class='decade tk-atlas'>{{decade}}s</p>
+		</div>
+	{{/if}}
+	{{/each}}
+</div>

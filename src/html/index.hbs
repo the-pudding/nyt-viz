@@ -23,11 +23,16 @@
 
 <body class='tk-publico'>
 
-	{{> base/header }}
+	{{> base/header 'sticky' }}
 
 	<main id='content'>
 
 		{{> story/intro }}
+		<div id='decades'>
+			{{> story/year-nav }}
+			{{> story/wordcloud }}
+			{{> story/sidebar }}
+		</div>
 		<!-- PUT ALL YOUR HTML HERE-->
 
 	</main>
