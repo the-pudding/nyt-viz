@@ -1,4 +1,6 @@
 /* global d3 */
+
+import wordcloud from './wordcloud';
 import './pudding-chart/area'
 
 // data
@@ -6,6 +8,7 @@ let data = null
 
 //selections
 const $freqChart = d3.select('.chart-wrapper')
+
 
 function resize() {}
 
@@ -29,12 +32,17 @@ function setUpFreqChart() {
 }
 
 function init() {
+	wordcloud.init();
   return new Promise((resolve) => {
     loadData()
       .then(response => {
 				setUpFreqChart()
       })
   })
+
 }
 
-export default { init, resize };
+export default {
+	init,
+	resize
+};
