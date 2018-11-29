@@ -7,6 +7,8 @@
  4b. const chart = d3.select('.thing').datum(datum).puddingChartLine();
 */
 
+import textures from 'textures';
+
 d3.selection.prototype.puddingChartArea = function init(options) {
 	function createChart(el) {
 		const $sel = d3.select(el);
@@ -34,14 +36,35 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let yAxis = null;
 		let yAxisGroup = null;
 		let axisPadding = null;
+		let wordLine = null;
+		let lines = null;
+		let wordAreas = null;
+		let areas = null;
+		let dataByWord = null;
+		let drawLine = null;
+		let drawArea = null;
+
+		function nestData() {
+			dataByWord = d3.nest()
+				.key(function(d) { return d.word;})
+				.sortValues(function(a,b) {
+					return a.year - b.year;
+				})
+				.entries(data)
+				.map(d => {
+					const values =  d3.range(1900, 1980, 10).map(y => {
+						const match = d.values.find(v => +v.year === y)
+						return match ? match : {word: d.key, year: y.toString(), frequency: null}
+					})
+					return {
+						...d,
+						values
+					}
+				})
+		}
 
 		// helper functions
 		function updateScales() {
-			dataByDecade = d3.nest()
-				.key(function(d) { return d.year;})
-				.entries(data);
-
-			data = data[0]
 
 			let maxX = d3.max(data, function(d) { return d.year; });
 			let minX = d3.min(data, function(d) { return d.year; });
@@ -67,13 +90,32 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				.axisLeft(yScale)
 				.tickPadding(8)
 				.tickSize(-width)
-				//.ticks(10)
-				//.tickFormat(function(d) { return d * 10000000})
+
+			// define the line
+			drawLine = d3.line()
+				.defined(function(d) { return d; })
+				.x(function(d) { return xScale(d.year); })
+				.y(function(d) { return yScale(d.frequency); })
+
+			lines
+				.attr("d", function(d) { return drawLine(d.values); })
+
+			// define the area
+			drawArea = d3.area()
+				.defined(drawLine.defined())
+				.x(function(d) {return xScale(d.year); })
+				.y0(height)
+				.y1(function(d) {return yScale(d.frequency); });
+
+			areas
+				.attr("d", function(d) { return drawArea(d.values); })
 		}
 
 		const Chart = {
 			// called once at start
 			init() {
+				nestData()
+
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');
 
@@ -90,11 +132,34 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				yAxisGroup = $axis.append('g')
 					.attr('class', 'y axis')
-					.selectAll('g')
-					.classed('g-baseline', function(d) {return d == 0})
 
 				// setup viz group
 				$vis = $g.append('g.g-vis');
+
+				// textures
+				const t = textures.lines().size(4).strokeWidth(1).stroke("#BAB3A9");;
+				$vis.call(t)
+
+				// append area
+				wordAreas = $vis.selectAll('.wordArea')
+					.data(dataByWord)
+					.enter()
+					.append('g')
+					.at('class', 'wordArea')
+
+				areas = wordAreas.append('path')
+					.attr('class', function(d) {return `area area-${d.values[0].word}`})
+					.style("fill", t.url());
+
+				// append line
+				wordLine = $vis.selectAll('.wordLine')
+					.data(dataByWord)
+					.enter()
+					.append('g')
+					.at('class', 'wordLine')
+
+				lines = wordLine.append('path')
+					.attr('class', function(d) {return `line line-${d.values[0].word}`})
 
 				Chart.resize();
 				Chart.render();
@@ -117,6 +182,8 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 					yGrouping
 						.at('transform', `translate(${marginLeft}, ${marginTop})`)
+						.selectAll("g")
+		    		.classed("g-baseline", function(d) { return d == 0 });
 
 				$svg.at({
 					width: width + marginLeft + marginRight,

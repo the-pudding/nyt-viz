@@ -15,7 +15,7 @@ function loadData() {
 		d3.loadData(filePath, (err, response) => {
 			if (err) reject (err)
 			else resolve(response)
-			data = response
+			data = response[0]
 		})
 	})
 }
