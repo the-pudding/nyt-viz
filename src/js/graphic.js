@@ -1,9 +1,13 @@
 /* global d3 */
+import wordcloud from './wordcloud';
 
 function resize() {}
 
 function init() {
-	console.log('Make something awesome!');
+	wordcloud.init();
 }
 
-export default { init, resize };
+export default {
+	init,
+	resize
+};
