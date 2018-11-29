@@ -4,22 +4,53 @@
 
 let $svg;
 let wordcloud;
+let rawCloudData;
+let rawArticleData;
 let nestedYearCloudData = []
+let size;
 
 function resize() {}
 
+function shuffle(array) {
+	var currentIndex = array.length,
+		temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+}
+
+
+
 function appendDOMElements(size) {
-	$svg = d3.selectAll('.decades-box')
+
+
+	$svg = d3.select('.decades-box')
+		// .selectAll('svg.decade')
+		// .data(nestedYearCloudData[0]) //generating only one svg for first decade only
+		// .enter()
 		.append('svg.decade')
 
 	$svg.at('height', size.height)
 		.at('width', size.width)
 
 
-
 	wordcloud = $svg.append("g")
 		.at('class', 'wordcloud')
-		.at("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
+		.at("transform", `translate(${size.width / 2},${size.height / 2})`)
+
+
 }
 
 
@@ -38,10 +69,7 @@ function nestDataByYear(data) {
 				rank: +term.rank,
 				overindex: +term.overindex,
 				wordOriginal: term.word,
-				word: term.word.toLowerCase()
-					.split(' ')
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(' ')
+				word: term.word
 			}))
 		}))
 
@@ -57,78 +85,9 @@ function getDimensions() {
 	return size
 }
 
-// function draw(data, bounds) {
-// 	var w = window.innerWidth,
-// 		h = window.innerHeight;
-
-
-// 	const $svg = d3.select('svg.decade')
-
-// scale = bounds ? Math.min(
-// 	w / Math.abs(bounds[1].x - w / 2),
-// 	w / Math.abs(bounds[0].x - w / 2),
-// 	h / Math.abs(bounds[1].y - h / 2),
-// 	h / Math.abs(bounds[0].y - h / 2)) / 2 : 1;
-
-// var text = vis.selectAll("text")
-// 	.data(data, function (d) {
-// 		return d.text.toLowerCase();
-// 	});
-// text.transition()
-// 	.duration(1000)
-// 	.attr("transform", function (d) {
-// 		return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-// 	})
-// 	.style("font-size", function (d) {
-// 		return d.size + "px";
-// 	});
-// text.enter().append("text")
-// 	.attr("text-anchor", "middle")
-// 	.attr("transform", function (d) {
-// 		return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-// 	})
-// 	.style("font-size", function (d) {
-// 		return d.size + "px";
-// 	})
-// 	.style("opacity", 1e-6)
-// 	.transition()
-// 	.duration(1000)
-// 	.style("opacity", 1);
-// text.style("font-family", function (d) {
-// 		return d.font;
-// 	})
-// 	.style("fill", function (d) {
-// 		return fill(d.text.toLowerCase());
-// 	})
-// 	.text(function (d) {
-// 		return d.text;
-// 	});
-
-// vis.transition().attr("transform", "translate(" + [w >> 1, h >> 1] + ")scale(" + scale + ")");
-// }
-
-// function renderCloud(size, tags) {
-
-// 	const layout = d3.layout.cloud()
-// 		.timeInterval(Infinity)
-// 		.size([size.width, size.height])
-// 		// .fontSize(function (d) {
-// 		// 	return fontSize(+d.value);
-// 		// })
-// 		.text(function (d) {
-// 			return d.word;
-// 		})
-// 		.on("end", draw);
 
 const fontSize = d3.scaleSqrt().range([10, 100]);
 
-// 	if (tags.length) {
-// 		fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
-// 	}
-
-// 	layout.stop().words(tags).start();
-
-// }
 
 function createCloudLayout(size, data) {
 
@@ -136,15 +95,9 @@ function createCloudLayout(size, data) {
 		.timeInterval(10)
 		.size([size.width, size.height])
 		.words(data)
-		.rotate(function (d) {
-			return 0;
-		})
-		.fontSize(function (d, i) {
-			return fontSize(Math.random());
-		})
-		.text(function (d) {
-			return d.word;
-		})
+		.rotate(() => 0)
+		.fontSize((d, i) => fontSize(Math.random()))
+		.text(d => d.word)
 		.spiral("archimedean")
 		.on("end", draw)
 		.start()
@@ -158,41 +111,56 @@ function draw(words) {
 	wordcloud.selectAll("text")
 		.data(words)
 		.enter()
-		.append("text")
-		.attr('class', 'word')
-		.style("font-size", function (d) {
-			return d.size + "px";
+		.append('text')
+		.at('class', 'word')
+		.at('data-attribute', d => d.word)
+		.style('font-size', d => `${d.size}px`)
+		.at('text-anchor', 'middle')
+		.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
+		.text(d => d.word.toLowerCase()
+			.split(' ')
+			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+			.join(' '))
+		.on('click', d => {
+
+			d3.select('div.articles-container')
+				.remove()
+
+			const wordCloudWord = d.word;
+
+
+			const relevantArticleData = shuffle(rawArticleData.filter(row => row.term === wordCloudWord).slice(0, 3))
+
+			console.log(relevantArticleData)
+
+			const $articlesBox = d3.select('.decades-box')
+				.append('div.articles-container')
+
+			const $articles = $articlesBox.selectAll('p.article')
+				.data(relevantArticleData)
+				.enter()
+				.append('p.article')
+
+			$articles.text(d => d.para)
+
 		})
-		.attr("text-anchor", "middle")
-		.attr("transform", function (d) {
-			return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-		})
-		.text(function (d) {
-			return d.word;
-		});
-};
+}
 
 function init() {
-	d3.loadData('/assets/data/word_cloud_data.csv', (error, response) => {
+	d3.loadData('/assets/data/word_cloud_data.csv', '/assets/data/term_article_pairs_overall.csv', (error, response) => {
 
 		// Data
-		const rawCloudData = response[0];
-		const nestedYearCloudData = nestDataByYear(rawCloudData);
+		rawCloudData = response[0];
+		rawArticleData = response[1];
 
-		const size = getDimensions();
+		nestedYearCloudData = nestDataByYear(rawCloudData);
+
+		size = getDimensions();
+
+		//DOM els + word cloud
 		appendDOMElements(size);
-
 		const tags = nestedYearCloudData[0].values;
-
 		const cloudLayout = createCloudLayout(size, tags);
-
-
-
-
-
-		// renderCloud(size, tags);
-
-
 	})
 }
 
