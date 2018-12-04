@@ -46,15 +46,21 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 		function nestData() {
 			dataByWord = d3.nest()
-				.key(function(d) { return d.word;})
-				.sortValues(function(a,b) {
+				.key(function (d) {
+					return d.word;
+				})
+				.sortValues(function (a, b) {
 					return a.year - b.year;
 				})
 				.entries(data)
 				.map(d => {
-					const values =  d3.range(1900, 1980, 10).map(y => {
+					const values = d3.range(1900, 1980, 10).map(y => {
 						const match = d.values.find(v => +v.year === y)
-						return match ? match : {word: d.key, year: y.toString(), frequency: null}
+						return match ? match : {
+							word: d.key,
+							year: y.toString(),
+							frequency: null
+						}
 					})
 					return {
 						...d,
@@ -66,9 +72,15 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		// helper functions
 		function updateScales() {
 
-			let maxX = d3.max(data, function(d) { return d.year; });
-			let minX = d3.min(data, function(d) { return d.year; });
-			let maxY = d3.max(data, function(d) { return d.frequency; });
+			let maxX = d3.max(data, function (d) {
+				return d.year;
+			});
+			let minX = d3.min(data, function (d) {
+				return d.year;
+			});
+			let maxY = d3.max(data, function (d) {
+				return d.frequency;
+			});
 
 			xScale = d3
 				.scaleLinear()
@@ -83,7 +95,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			xAxis = d3
 				.axisBottom(xScale)
 				.tickPadding(8)
-				.tickValues(xScale.ticks(5).concat( xScale.domain()))
+				.tickValues(xScale.ticks(5).concat(xScale.domain()))
 				.tickFormat(d3.format("d"));
 
 			yAxis = d3
@@ -93,22 +105,36 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 			// define the line
 			drawLine = d3.line()
-				.defined(function(d) { return d; })
-				.x(function(d) { return xScale(d.year); })
-				.y(function(d) { return yScale(d.frequency); })
+				.defined(function (d) {
+					return d;
+				})
+				.x(function (d) {
+					return xScale(d.year);
+				})
+				.y(function (d) {
+					return yScale(d.frequency);
+				})
 
 			lines
-				.attr("d", function(d) { return drawLine(d.values); })
+				.attr("d", function (d) {
+					return drawLine(d.values);
+				})
 
 			// define the area
 			drawArea = d3.area()
 				.defined(drawLine.defined())
-				.x(function(d) {return xScale(d.year); })
+				.x(function (d) {
+					return xScale(d.year);
+				})
 				.y0(height)
-				.y1(function(d) {return yScale(d.frequency); });
+				.y1(function (d) {
+					return yScale(d.frequency);
+				});
 
 			areas
-				.attr("d", function(d) { return drawArea(d.values); })
+				.attr("d", function (d) {
+					return drawArea(d.values);
+				})
 		}
 
 		const Chart = {
@@ -148,7 +174,9 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.at('class', 'wordArea')
 
 				areas = wordAreas.append('path')
-					.attr('class', function(d) {return `area area-${d.values[0].word}`})
+					.attr('class', function (d) {
+						return `area area-${d.values[0].word}`
+					})
 					.style("fill", t.url());
 
 				// append line
@@ -159,7 +187,9 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.at('class', 'wordLine')
 
 				lines = wordLine.append('path')
-					.attr('class', function(d) {return `line line-${d.values[0].word}`})
+					.attr('class', function (d) {
+						return `line line-${d.values[0].word}`
+					})
 
 				Chart.resize();
 				Chart.render();
@@ -177,13 +207,15 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.at('transform', `translate(${marginLeft},${axisPadding})`)
 					.call(xAxis);
 
-					const yGrouping = $axis.select('.y')
-						.call(yAxis)
+				const yGrouping = $axis.select('.y')
+					.call(yAxis)
 
-					yGrouping
-						.at('transform', `translate(${marginLeft}, ${marginTop})`)
-						.selectAll("g")
-		    		.classed("g-baseline", function(d) { return d == 0 });
+				yGrouping
+					.at('transform', `translate(${marginLeft}, ${marginTop})`)
+					.selectAll("g")
+					.classed("g-baseline", function (d) {
+						return d == 0
+					});
 
 				$svg.at({
 					width: width + marginLeft + marginRight,
