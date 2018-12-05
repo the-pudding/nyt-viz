@@ -31,6 +31,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const scaleY = null;
 		let yScale = d3.scaleLinear();
 		const fontSize = d3.scaleSqrt().range([10, 100]);
+		let drawLine = null;
+		let drawArea = null;
+
 
 		// dom elements
 		let $svg = null;
@@ -39,6 +42,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		let $vis = null;
 		const $articlesBox = d3.select('.sidebar');
 		const $headlineContainer = $articlesBox.select('div.headline-wrapper')
+		const $areaChartContainer = $articlesBox.select('div.chart-wrapper')
 
 		// helper functions
 
@@ -93,6 +97,13 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					const wordCloudWord = d.word;
 					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
 					let maxY = null;
+					let areaChartHeight = null;
+					let areaChartWidth = null;
+
+					const areaMarginTop = 0;
+					const areaMarginBottom = 25;
+					const areaMarginLeft = 30;
+					const areaMarginRight = 30;
 
 					console.log(relevantArticleData)
 
@@ -130,12 +141,18 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 						}))
 
 					console.log(relevantWordFrequencies)
-					// yScale
-					maxY = d3.max(relevantWordFrequencies, function (word) {
-						return word.frequency;
-					});
 
-					console.log(maxY);
+					// maxY = d3.max(relevantWordFrequencies, function (word) {
+					// 	return word.frequency;
+					// });
+
+					// width = $areaChartContainer.node().offsetWidth - areaMarginLeft - areaMarginRight;
+					// height = $areaChartContainer.node().offsetHeight - areaMarginTop - areaMarginBottom;
+					// // axisPadding = areaChartHeight;
+
+					// yScale
+					// 	.domain([0, maxY])
+					// 	.range([height, 0]);
 
 
 

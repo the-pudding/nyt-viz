@@ -79,7 +79,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				return d.year;
 			});
 			let maxY = d3.max(data, function (d) {
-				return d.frequency;
+				return +d.frequency;
 			});
 
 			xScale = d3
@@ -141,6 +141,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			// called once at start
 			init() {
 				nestData()
+				console.log(dataByWord)
 
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');
