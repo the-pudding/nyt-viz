@@ -18,6 +18,35 @@ function nestWordCloudDataByYear(data) {
 	return nestedDataTyped;
 }
 
+function formatArticles(rawArticleData) {
+	return rawArticleData.map(article => ({
+		...article,
+		decadeString: `dec_${article.year.slice(0,3)}0`
+	}))
+}
+
+
+function joinWordsToArticles(formattedArticleData, wordCloudData) {
+	let i = 0;
+	for (i; i < wordCloudData.length; i++) {
+		let decade = wordCloudData[i].key
+		const relevantArticles = formattedArticleData.filter(article => article.decadeString === decade)
+		wordCloudData[i].articles = relevantArticles;
+	}
+	return wordCloudData
+}
+
+
+function joinWordsToFrequencies(areaChartData, wordCloudData) {
+	return wordCloudData.map(decade => ({
+		...decade,
+		areaData: areaChartData
+	}))
+}
+
 export default {
-	nestWordCloudDataByYear
+	nestWordCloudDataByYear,
+	joinWordsToArticles,
+	joinWordsToFrequencies,
+	formatArticles
 }

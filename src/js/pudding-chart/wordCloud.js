@@ -13,8 +13,11 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const $svgContainer = $sel.append('div.word-cloud__container')
 		let data = $sel.datum();
 		const tags = data.values;
+		const articles = data.articles
+		const wordFrequencies = data.areaData;
 
-		console.log(data)
+
+		console.log(articles)
 		// dimension stuff
 		let width = 0;
 		let height = 0;
@@ -26,6 +29,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		// scales
 		const scaleX = null;
 		const scaleY = null;
+		let yScale = d3.scaleLinear();
 		const fontSize = d3.scaleSqrt().range([10, 100]);
 
 		// dom elements
@@ -33,8 +37,26 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		let $wordcloud = null;
 		let $axis = null;
 		let $vis = null;
+		const $articlesBox = d3.select('.sidebar');
+		const $headlineContainer = $articlesBox.select('div.headline-wrapper')
 
 		// helper functions
+
+		function shuffle(array) {
+			var currentIndex = array.length,
+				temporaryValue, randomIndex;
+			// While there remain elements to shuffle...
+			while (0 !== currentIndex) {
+				// Pick a remaining element...
+				randomIndex = Math.floor(Math.random() * currentIndex);
+				currentIndex -= 1;
+				// And swap it with the current element.
+				temporaryValue = array[currentIndex];
+				array[currentIndex] = array[randomIndex];
+				array[randomIndex] = temporaryValue;
+			}
+			return array;
+		}
 
 		function createCloudLayout(width, height, data) {
 
@@ -67,23 +89,68 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
-			// .on('click', d => {
-			// 	d3.select('div.articles-container')
-			// 		.remove()
+				.on('click', d => {
+					const wordCloudWord = d.word;
+					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
+					let maxY = null;
 
-			// 	const wordCloudWord = d.word;
-			// 	const relevantArticleData = shuffle(rawArticleData.filter(row => row.term === wordCloudWord).slice(0, 3))
+					console.log(relevantArticleData)
 
-			// 	const $articlesBox = d3.select('.decades-box')
-			// 		.append('div.articles-container')
+					// Update article text
+					$headlineContainer
+						.selectAll('div.headline')
+						.remove()
 
-			// 	const $articles = $articlesBox.selectAll('p.article')
-			// 		.data(relevantArticleData)
-			// 		.enter()
-			// 		.append('p.article')
+					const headlineData = $headlineContainer
+						.selectAll('div.headline')
+						.data(relevantArticleData)
+						.enter()
 
-			// 	$articles.text(d => d.para)
-			// })
+					const $headlines = headlineData
+						.append('div.headline')
+
+					// Para numbers
+					$headlines
+						.append('p.hed-num tk-atlas')
+						.text((d, i) => i + 1)
+
+					// Headline text
+					$headlines
+						.append('p.hed-text')
+						.text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
+
+
+					// Update area chart
+					relevantWordFrequencies = wordFrequencies.filter(term => term.word === wordCloudWord)
+						.map(word => ({
+							...word,
+							frequency: +word.frequency,
+							year: +word.year,
+							decadeString: `dec_${word.year}`
+						}))
+
+					console.log(relevantWordFrequencies)
+					// yScale
+					maxY = d3.max(relevantWordFrequencies, function (word) {
+						return word.frequency;
+					});
+
+					console.log(maxY);
+
+
+
+					$articlesBox.selectAll('path.area')
+						.st('display', 'none')
+
+					$articlesBox.selectAll('path.line')
+						.st('display', 'none')
+
+					$articlesBox.select(`path.line.line-${wordCloudWord}`)
+						.st('display', 'inline-block')
+
+					$articlesBox.select(`path.area.area-${wordCloudWord}`)
+						.st('display', 'inline-block')
+				})
 		}
 
 		const Chart = {
