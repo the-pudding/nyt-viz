@@ -140,7 +140,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 							decadeString: `dec_${word.year}`
 						}))
 
-					console.log(relevantWordFrequencies)
+					// console.log(relevantWordFrequencies)
 
 					// maxY = d3.max(relevantWordFrequencies, function (word) {
 					// 	return word.frequency;
