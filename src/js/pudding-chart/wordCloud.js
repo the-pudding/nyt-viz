@@ -158,15 +158,19 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 					$articlesBox.selectAll('path.area')
 						.st('display', 'none')
+						.classed('area-highlight', false)
 
 					$articlesBox.selectAll('path.line')
 						.st('display', 'none')
+						.classed('line-highlight', false)
 
 					$articlesBox.select(`path.line.line-${wordCloudWord}`)
 						.st('display', 'inline-block')
+						.classed('line-highlight', true)
 
 					$articlesBox.select(`path.area.area-${wordCloudWord}`)
 						.st('display', 'inline-block')
+						.classed('area-highlight', true)
 				})
 		}
 

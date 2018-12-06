@@ -1,8 +1,11 @@
 .sidebar
 	width 20rem
 	// position absolute
+	display flex
+	align-self flex-start
+	flex-direction column
 	position sticky
-	top 0
+	top 5rem
 	right 0
 	padding-right 2rem
 
@@ -48,7 +51,7 @@
 		.line
 			display none
 
-		.line-boer
+		.line-highlight
 			fill none
 			stroke black
 			stroke-width 2
@@ -57,5 +60,5 @@
 		.area
 			display none
 
-		.area-boer
+		.area-highlight
 			display inline-block
