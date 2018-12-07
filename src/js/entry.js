@@ -1,8 +1,8 @@
 /* global d3 */
 import debounce from 'lodash.debounce';
 import isMobile from './utils/is-mobile';
-import graphic from './wordcloud';
-import wordcloud from './wordcloud';
+import graphic from './graphic';
+// import wordcloud from './wordcloud';
 
 const $body = d3.select('body');
 let previousWidth = 0;
