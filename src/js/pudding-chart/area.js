@@ -228,6 +228,10 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			render() {
 				return Chart;
 			},
+			update() {
+				//Anything to update scales
+				return Chart
+			},
 			// get / set data
 			data(val) {
 				if (!arguments.length) return data;

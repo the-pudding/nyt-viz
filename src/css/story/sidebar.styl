@@ -14,6 +14,7 @@
 
 		span
 			color $red-accent
+			font-family $national
 			font-weight 700
 			set-type-size(large)
 
@@ -26,6 +27,7 @@
 			.hed-num
 				color $red-accent
 				font-weight 700
+				font-family $national
 
 			.hed-text
 				padding-left 1rem
@@ -33,7 +35,7 @@
 
 				span
 					font-weight 700
-					font-family $atlas
+					font-family $national
 					text-transform uppercase
 					color $off-black
 					text-decoration underline
@@ -44,6 +46,9 @@
 
 		.domain, .tick line
 			display none
+
+		.tick text
+			font-family $national	
 
 		.g-baseline line
 			display inline-block
