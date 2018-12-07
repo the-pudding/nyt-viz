@@ -141,7 +141,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			// called once at start
 			init() {
 				nestData()
-				console.log(dataByWord)
+				//console.log(dataByWord)
 
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');

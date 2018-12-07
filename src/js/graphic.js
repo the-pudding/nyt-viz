@@ -4,6 +4,7 @@
 import cleanData from './cleanData';
 import './pudding-chart/area'
 import './pudding-chart/wordcloud';
+import enterView from 'enter-view';
 
 // data
 let areaChartData;
@@ -37,7 +38,7 @@ function loadData() {
 
 				areaChartData = response[0];
 
-				console.log(areaChartData)
+				//console.log(areaChartData)
 
 				wordCloudDataRaw = response[1];
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(response[1]);
@@ -51,15 +52,13 @@ function loadData() {
 
 				// Joining articles to word decades
 				wordCloudDataJoined = cleanData.joinWordsToArticles(formattedArticleData, wordCloudDataAreaData);
-				console.log(wordCloudDataJoined)
+				//console.log(wordCloudDataJoined)
 			}
 		})
 	})
 }
 
 function setUpFreqChart() {
-	// const $sel = $freqChart
-
 	const chart = $freqChart
 		.datum(areaChartData)
 		.puddingChartArea()
@@ -71,6 +70,28 @@ function setUpWordCloud() {
 		.puddingChartWordCloud()
 }
 
+function handleNavSelection() {
+	enterView({
+	    selector: '.wordcloud-wrapper',
+	    enter: function(el) {
+					const cloudDecade = el.classList[1].split('-')[1]
+					const matchingNav = d3.select(`.decade-${cloudDecade}`)
+					d3.selectAll('.decade').classed('current', false)
+					matchingNav.classed('current', true)
+	        el.classList.add('entered');
+	    },
+			exit: function(el) {
+					const cloudDecade = el.classList[1].split('-')[1]
+					const matchingNav = d3.select(`.decade-${cloudDecade}`)
+					d3.selectAll('.decade').classed('current', false)
+					matchingNav.classed('current', true)
+					el.classList.remove('entered');
+			},
+	    offset: 0.5, // enter at middle of viewport
+	    once: false, // trigger every time
+	});
+}
+
 function init() {
 
 	return new Promise((resolve) => {
@@ -78,6 +99,7 @@ function init() {
 			.then(response => {
 				setUpFreqChart();
 				setUpWordCloud();
+				handleNavSelection();
 			})
 	})
 

@@ -17,7 +17,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const wordFrequencies = data.areaData;
 
 
-		console.log(articles)
+		//console.log(articles)
 		// dimension stuff
 		let width = 0;
 		let height = 0;
@@ -105,7 +105,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					const areaMarginLeft = 30;
 					const areaMarginRight = 30;
 
-					console.log(relevantArticleData)
+					//console.log(relevantArticleData)
 
 					// Update article text
 					$headlineContainer
