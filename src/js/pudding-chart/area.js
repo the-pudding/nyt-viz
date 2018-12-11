@@ -16,7 +16,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		// dimension stuff
 		let width = 0;
 		let height = 0;
-		const marginTop = 0;
+		const marginTop = 5;
 		const marginBottom = 25;
 		const marginLeft = 30;
 		const marginRight = 30;
@@ -44,7 +44,9 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let drawLine = null;
 		let drawArea = null;
 		let maxY = null;
+		let tooltip = null;
 
+		// helper functions
 		function nestData() {
 			dataByWord = d3.nest()
 				.key(function (d) { return d.word; })
@@ -66,7 +68,39 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				})
 		}
 
-		// helper functions
+		function handleMouseMove(d){
+			const selected = d3.selectAll('.line')
+			const highlighted = selected.data()
+			const currWordData = highlighted[0].values
+			const bisectDate = d3.bisector(d => d.year).left
+			const x0 = xScale.invert(d3.mouse(this)[0])
+			const i = bisectDate(currWordData, x0, 1)
+			const d0 = currWordData[i - 1]
+			const d1 = currWordData[i]
+			const e = x0 - d0.year > d1.year - x0 ? d1 : d0
+
+			const moveX = xScale(e.year)
+			const moveY = yScale(e.frequency)
+
+			tooltip.at('transform', `translate(${moveX}, ${moveY})`)
+
+			tooltip.selectAll('.tooltip-text')
+				.text(d => (+e.frequency).toFixed(2))
+				// .at('text-anchor', d => {
+				// 	let anchor = null
+				// 	if (e.year >= 1940 ) anchor = 'end'
+				// 	else if (e.year <= 1950 ) anchor = 'start'
+				// 	else anchor = 'middle'
+				// 	return anchor
+				// })
+				.at('dx', d => {
+					let pos = null
+					if (e.year >= 1940 ) pos = -10
+					else if (e.year <= 1950 ) pos = 35
+					console.log(pos)
+					return pos
+				})
+		}
 
 		const Chart = {
 			// called once at start
@@ -150,7 +184,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				yScale = d3
 					.scaleLinear()
-					.domain([0, maxY])
+					.domain([0, maxY]).nice()
 					.range([height, 0]);
 
 				xAxis = d3
@@ -164,6 +198,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.tickPadding(8)
 					.ticks(5)
 					.tickSize(-width)
+					.tickFormat(d => d *100000);
 
 				$axis.select('.x')
 					.at('transform', `translate(${marginLeft},${axisPadding})`)
@@ -183,6 +218,20 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					width: width + marginLeft + marginRight,
 					height: height + marginTop + marginBottom
 				});
+
+				tooltip = $svg.append('g').at('class', 'g-tooltip').st('display', 'none')
+				tooltip.append('circle').at('class', 'tooltip-circle').at('r', 5).at('transform', 'translate(' + marginLeft + ',' + marginTop + ')')
+				tooltip.append('text').at('class', 'tooltip-text').at('dy', 10).at('dx', 5)
+
+				$svg.append('rect')
+					.at('width', width)
+					.at('height', height)
+					.at('class', 'overlay')
+					.at('transform', 'translate(' + marginLeft + ',' + marginTop + ')')
+					.on('mouseover', () => tooltip.st('display', null))
+					.on('mouseout', () => tooltip.st('display', 'none'))
+					.on('mousemove touchstart', handleMouseMove)
+
 				return Chart;
 			},
 			// update scales and render chart

@@ -97,14 +97,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.on('click', d => {
 					const wordCloudWord = d.word;
 					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
-					let maxY = null;
-					let areaChartHeight = null;
-					let areaChartWidth = null;
-
-					const areaMarginTop = 0;
-					const areaMarginBottom = 25;
-					const areaMarginLeft = 30;
-					const areaMarginRight = 30;
 
 					//highlight clicked word
 					d3.selectAll('.word').classed('clickedWord', false)
@@ -144,38 +136,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 							decadeString: `dec_${word.year}`
 						}))
 
-					// console.log(relevantWordFrequencies)
-
-					// maxY = d3.max(relevantWordFrequencies, function (word) {
-					// 	return word.frequency;
-					// });
-
-					// width = $areaChartContainer.node().offsetWidth - areaMarginLeft - areaMarginRight;
-					// height = $areaChartContainer.node().offsetHeight - areaMarginTop - areaMarginBottom;
-					// // axisPadding = areaChartHeight;
-
-					// yScale
-					// 	.domain([0, maxY])
-					// 	.range([height, 0]);
 					areaChartRef.update(wordCloudWord)
 
 					d3.select('.sidebar').transition().duration(500).st('opacity', 1)
-
-					// $articlesBox.selectAll('path.area')
-					// 	.st('display', 'none')
-					// 	.classed('area-highlight', false)
-					//
-					// $articlesBox.selectAll('path.line')
-					// 	.st('display', 'none')
-					// 	.classed('line-highlight', false)
-					//
-					// $articlesBox.select(`path.line.line-${wordCloudWord}`)
-					// 	.st('display', 'inline-block')
-					// 	.classed('line-highlight', true)
-					//
-					// $articlesBox.select(`path.area.area-${wordCloudWord}`)
-					// 	.st('display', 'inline-block')
-					// 	.classed('area-highlight', true)
 				})
 		}
 
