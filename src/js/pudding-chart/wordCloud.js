@@ -12,6 +12,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const $sel = d3.select(el);
 		const $svgContainer = $sel.append('div.word-cloud__container')
 		let data = $sel.datum();
+		let areaChartRef = null;
 		const tags = data.values;
 		const articles = data.articles
 		const wordFrequencies = data.areaData;
@@ -107,7 +108,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 					//console.log(relevantArticleData)
 					const clickedWord = d3.select(this)
-					console.log(clickedWord)
+					//console.log(clickedWord.node())
 
 					// Update article text
 					$headlineContainer
@@ -124,7 +125,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 					// Para numbers
 					$headlines
-						.append('p.hed-num tk-atlas')
+						.append('p.hed-num tk-national')
 						.text((d, i) => i + 1)
 
 					// Headline text
@@ -155,24 +156,25 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					// yScale
 					// 	.domain([0, maxY])
 					// 	.range([height, 0]);
+					areaChartRef.update(wordCloudWord)
 
+					d3.select('.sidebar').transition().duration(500).st('opacity', 1)
 
-
-					$articlesBox.selectAll('path.area')
-						.st('display', 'none')
-						.classed('area-highlight', false)
-
-					$articlesBox.selectAll('path.line')
-						.st('display', 'none')
-						.classed('line-highlight', false)
-
-					$articlesBox.select(`path.line.line-${wordCloudWord}`)
-						.st('display', 'inline-block')
-						.classed('line-highlight', true)
-
-					$articlesBox.select(`path.area.area-${wordCloudWord}`)
-						.st('display', 'inline-block')
-						.classed('area-highlight', true)
+					// $articlesBox.selectAll('path.area')
+					// 	.st('display', 'none')
+					// 	.classed('area-highlight', false)
+					//
+					// $articlesBox.selectAll('path.line')
+					// 	.st('display', 'none')
+					// 	.classed('line-highlight', false)
+					//
+					// $articlesBox.select(`path.line.line-${wordCloudWord}`)
+					// 	.st('display', 'inline-block')
+					// 	.classed('line-highlight', true)
+					//
+					// $articlesBox.select(`path.area.area-${wordCloudWord}`)
+					// 	.st('display', 'inline-block')
+					// 	.classed('area-highlight', true)
 				})
 		}
 
@@ -222,6 +224,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			// update scales and render chart
 			render() {
 				return Chart;
+			},
+			area(wordArea) {
+				areaChartRef = wordArea
 			},
 			// get / set data
 			data(val) {

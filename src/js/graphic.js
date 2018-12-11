@@ -15,6 +15,8 @@ let exampleArticleData;
 let formattedArticleData;
 let wordCloudDataJoined;
 
+let wordArea = null;
+
 //selections
 const $freqChart = d3.select('.chart-wrapper')
 const $wordCloudContainers = d3.selectAll('.wordcloud-wrapper')
@@ -59,7 +61,7 @@ function loadData() {
 }
 
 function setUpFreqChart() {
-	const chart = $freqChart
+	wordArea = $freqChart
 		.datum(areaChartData)
 		.puddingChartArea()
 }
@@ -68,6 +70,7 @@ function setUpWordCloud() {
 	const wordCloudCharts = $wordCloudContainers
 		.data(wordCloudDataJoined)
 		.puddingChartWordCloud()
+		wordCloudCharts.forEach(w => w.area(wordArea))
 }
 
 function handleNavSelection() {

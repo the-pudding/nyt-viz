@@ -1,6 +1,6 @@
 .sidebar
 	width 20rem
-	// position absolute
+	opacity 0
 	display flex
 	align-self flex-start
 	flex-direction column
@@ -28,10 +28,15 @@
 				color $red-accent
 				font-weight 700
 				font-family $national
+				vertical-align baseline
+				margin-top 1.25rem
 
 			.hed-text
-				padding-left 1rem
-				color darken($dark-tan, 10)
+				set-type-size(small)
+				line-height 1.5
+				vertical-align baseline
+				padding-left 0.75rem
+				color darken($dark-tan, 20)
 
 				span
 					font-weight 700
@@ -48,22 +53,16 @@
 			display none
 
 		.tick text
-			font-family $national	
+			font-family $national
 
 		.g-baseline line
 			display inline-block
 
 		.line
-			display none
-
-		.line-highlight
 			fill none
 			stroke black
 			stroke-width 2
 			display inline-block
 
 		.area
-			display none
-
-		.area-highlight
 			display inline-block
