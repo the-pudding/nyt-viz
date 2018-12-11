@@ -20,11 +20,16 @@
 
 		.word-cloud
 
+			.clickedWord
+				fill $off-black
+				font-family $national
+				font-weight 700
+				text-transform uppercase
+				&:hover
+					fill $off-black
+
 			text
 				font-family $tiempos
 				fill $dark-tan
 				&:hover
-					fill $off-black
-					font-family $national
-					font-weight 700
-					text-transform uppercase
+					fill darken($dark-tan, 20)

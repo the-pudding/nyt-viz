@@ -73,7 +73,6 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			init() {
 				nestData()
 				const initData = dataByWord.filter(d => d.key === 'boer')
-				console.log(initData)
 
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');

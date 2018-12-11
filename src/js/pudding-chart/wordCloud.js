@@ -106,9 +106,10 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					const areaMarginLeft = 30;
 					const areaMarginRight = 30;
 
-					//console.log(relevantArticleData)
-					const clickedWord = d3.select(this)
-					//console.log(clickedWord.node())
+					//highlight clicked word
+					d3.selectAll('.word').classed('clickedWord', false)
+					const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
+					clickedWord.classed('clickedWord', true)
 
 					// Update article text
 					$headlineContainer
