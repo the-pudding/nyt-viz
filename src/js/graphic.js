@@ -92,6 +92,29 @@ function handleNavSelection() {
 	});
 }
 
+function scrollTo(element) {
+	const h = window.innerHeight
+	console.log(h, element.offsetTop)
+	window.scroll({
+		behavior: 'smooth',
+		left: 0,
+		top: element.offsetTop + 120
+	});
+}
+
+function handleNavClick() {
+	const decades = d3.selectAll('.decade')
+	decades
+		.on('click', function() {
+			const decadeClick = d3.select(this).text().split('s')[0]
+			const el = d3.select(`.wordcloud-${decadeClick}`).node()
+			scrollTo(el);
+		})
+	//const { value } = this;
+	//const el = d3.select(`#${value}-link`).node();
+	//scrollTo(el);
+}
+
 function init() {
 
 	return new Promise((resolve) => {
@@ -100,6 +123,7 @@ function init() {
 				setUpFreqChart();
 				setUpWordCloud();
 				handleNavSelection();
+				handleNavClick();
 			})
 	})
 

@@ -1,5 +1,3 @@
-import './area'
-
 /*
  USAGE (example: line chart)
  1. c+p this template to a new file (line.js)
@@ -157,8 +155,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					// yScale
 					// 	.domain([0, maxY])
 					// 	.range([height, 0]);
-
-					//Chart.update called here inside of click
 
 
 
