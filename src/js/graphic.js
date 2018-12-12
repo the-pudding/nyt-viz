@@ -40,7 +40,7 @@ function loadData() {
 
 				areaChartData = response[0];
 
-				//console.log(areaChartData)
+				areaChartData.forEach(d => d.frequency = (d.frequency*100000))
 
 				wordCloudDataRaw = response[1];
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(response[1]);

@@ -18,7 +18,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const wordFrequencies = data.areaData;
 
 
-		console.log(tags)
+		//console.log(tags)
 
 		// dimension stuff
 		let width = 0;
@@ -107,7 +107,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					clickedWord.classed('clickedWord', true)
 
 					// setting overindex % text in sidebar
-					console.log(d)
+					//console.log(d)
 					$mentions.text(decadeOverindex + 'x')
 
 					// Update article text
