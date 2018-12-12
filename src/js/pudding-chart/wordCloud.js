@@ -18,7 +18,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const wordFrequencies = data.areaData;
 
 
-		//console.log(articles)
+		console.log(tags)
+
 		// dimension stuff
 		let width = 0;
 		let height = 0;
@@ -44,6 +45,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const $articlesBox = d3.select('.sidebar');
 		const $headlineContainer = $articlesBox.select('div.headline-wrapper')
 		const $areaChartContainer = $articlesBox.select('div.chart-wrapper')
+		const $mentions = $articlesBox.select('p.mentions').select('span')
 
 		// helper functions
 
@@ -96,12 +98,17 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					.join(' '))
 				.on('click', d => {
 					const wordCloudWord = d.word;
+					const decadeOverindex = d.overindex.toString().slice(0, 3);
 					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
 
 					//highlight clicked word
 					d3.selectAll('.word').classed('clickedWord', false)
 					const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
 					clickedWord.classed('clickedWord', true)
+
+					// setting overindex % text in sidebar
+					console.log(d)
+					$mentions.text(decadeOverindex + 'x')
 
 					// Update article text
 					$headlineContainer
