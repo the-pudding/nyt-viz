@@ -6,4 +6,9 @@
 			<strong>{{meta.author.name}}</strong>
 		</a>
 	</p>
+	<div class='prose'>
+		{{#each doc.intro}}
+		<p>{{{value}}}</p>
+		{{/each}}
+	</div>
 </div>
