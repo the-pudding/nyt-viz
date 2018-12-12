@@ -97,7 +97,6 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					let pos = null
 					if (e.year >= 1940 ) pos = -10
 					else if (e.year <= 1950 ) pos = 35
-					console.log(pos)
 					return pos
 				})
 		}
