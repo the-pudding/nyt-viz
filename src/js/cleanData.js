@@ -1,3 +1,16 @@
+function filterWordCloud(wordCloudData, filterArray) {
+	let includedWords = new Array;
+	for (let i in filterArray) {
+		includedWords.push(filterArray[i].word);
+	}
+	const filteredWordCloudData = wordCloudData.filter(cloudWord => includedWords.includes(cloudWord.word))
+
+	console.log(filteredWordCloudData)
+
+	return filteredWordCloudData;
+
+}
+
 function nestWordCloudDataByYear(data) {
 	const nestedDataRaw = d3.nest()
 		.key(d => +d.year)
@@ -45,6 +58,7 @@ function joinWordsToFrequencies(areaChartData, wordCloudData) {
 }
 
 export default {
+	filterWordCloud,
 	nestWordCloudDataByYear,
 	joinWordsToArticles,
 	joinWordsToFrequencies,
