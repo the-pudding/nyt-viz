@@ -54,7 +54,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				.sortValues(function (a, b) { return a.year - b.year; })
 				.entries(data)
 				.map(d => {
-					const values = d3.range(1900, 1980, 10).map(y => {
+					const values = d3.range(1900, 2020, 10).map(y => {
 						const match = d.values.find(v => +v.year === y)
 						return match ? match : {
 							word: d.key,
