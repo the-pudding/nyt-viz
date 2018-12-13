@@ -18,7 +18,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let height = 0;
 		const marginTop = 5;
 		const marginBottom = 25;
-		const marginLeft = 20;
+		const marginLeft = 22;
 		const marginRight = 30;
 
 		// scales
@@ -194,6 +194,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				xAxis = d3
 					.axisBottom(xScale)
 					.tickPadding(8)
+					//.tickValues([minX, maxX])
 					.tickValues(xScale.ticks(5).concat(xScale.domain()))
 					.tickFormat(d3.format("d"));
 
