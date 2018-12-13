@@ -23,16 +23,17 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		// dimension stuff
 		let width = 0;
 		let height = 0;
-		const marginTop = 0;
-		const marginBottom = 0;
-		const marginLeft = 0;
-		const marginRight = 0;
+		const marginTop = 5;
+		const marginBottom = 5;
+		const marginLeft = 5;
+		const marginRight = 5;
 
 		// scales
 		const scaleX = null;
 		const scaleY = null;
 		let yScale = d3.scaleLinear();
-		const fontSize = d3.scaleSqrt().range([10, 100]);
+		const fontSize = d3.scaleSqrt().range([20, 50]);
+
 		let drawLine = null;
 		let drawArea = null;
 
@@ -48,6 +49,21 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const $mentions = $articlesBox.select('p.mentions').select('span')
 
 		// helper functions
+
+		// function boldString(str, find, bufferChars) {
+		// 	const re = new RegExp(find, 'g');
+		// 	let editedString = str.replace(re, '<b>' + find + '</b>');
+
+		// 	const findLength = find.length
+		// 	const stringdIndex = editedString.indexOf(find);
+
+		// 	const startIndex = stringdIndex - bufferChars;
+		// 	const endIndex = stringdIndex + findLength + bufferChars;
+
+		// 	editedString = editedString.slice(startIndex, endIndex)
+
+		// 	return editedString;
+		// }
 
 		function shuffle(array) {
 			var currentIndex = array.length,
@@ -67,14 +83,20 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 		function createCloudLayout(width, height, data) {
 
+			fontSize.domain(d3.extent(data, (d) => {
+				return d.overindex;
+			}))
+
 			const layout = d3.layout.cloud()
-				.timeInterval(10)
-				.size([width, height])
+				.timeInterval(Infinity)
+				.size([width - (2 * marginLeft), height - (2 * marginTop)])
 				.words(data)
+				.padding(8)
 				.rotate(() => 0)
-				.fontSize((d, i) => fontSize(Math.random()))
+				.fontSize((d, i) => fontSize(d.overindex))
+				// .fontSize((d, i) => fontSize(Math.random()))
 				.text(d => d.word)
-				.spiral("archimedean")
+				.spiral("rectangular")
 				.on("end", draw)
 				.start()
 
@@ -92,7 +114,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.style('font-size', d => `${d.size}px`)
 				.at('text-anchor', 'middle')
 				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
-				.text(d => d.word.toLowerCase()
+				.text(d => d.text.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
@@ -128,10 +150,20 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 						.append('p.hed-num tk-national')
 						.text((d, i) => i + 1)
 
+
 					// Headline text
 					$headlines
 						.append('p.hed-text')
-						.text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
+						// .text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
+						.html(example => {
+							let lowerPara = example.para.toLowerCase();
+							const findLength = wordCloudWord.length
+							const stringdIndex = lowerPara.indexOf(wordCloudWord.toLowerCase());
+							const endIndex = stringdIndex + findLength;
+							let editedPara = example.para.slice(0, stringdIndex) + '<b>' + example.para.slice(stringdIndex, endIndex) + '</b>' + example.para.slice(endIndex);
+							return editedPara
+						})
+
 
 
 					// Update area chart
@@ -155,6 +187,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
 				$wordcloud = $svg.append("g").at('class', d => `word-cloud ${d.key}`)
 
+
+
 				const $g = $svg.append('g');
 
 				// offset chart for margins
@@ -177,9 +211,10 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				// defaults to grabbing dimensions from container element
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
 
-				// console.log(`width: ${width}`)
 				height = $sel.node().offsetHeight - marginTop - marginBottom;
-				// console.log(`height: ${height}`)
+
+
+
 				$svg.at({
 					width: width + marginLeft + marginRight,
 					height: height + marginTop + marginBottom
