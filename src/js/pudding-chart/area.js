@@ -18,7 +18,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let height = 0;
 		const marginTop = 5;
 		const marginBottom = 25;
-		const marginLeft = 30;
+		const marginLeft = 20;
 		const marginRight = 30;
 
 		// scales
@@ -45,6 +45,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let drawArea = null;
 		let maxY = null;
 		let tooltip = null;
+		let formatComma = d3.format(",")
 
 		// helper functions
 		function nestData() {
@@ -66,6 +67,17 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 						values
 					}
 				})
+				.map(d => {
+					const allValues = d.values
+					const freqValues = allValues.map(f => {
+						return f.frequency
+					})
+					let maxFreq = d3.max(freqValues)
+					return  {
+						...d,
+						maxFreq: maxFreq
+					}
+				})
 		}
 
 		function handleMouseMove(d){
@@ -85,18 +97,11 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			tooltip.at('transform', `translate(${moveX}, ${moveY})`)
 
 			tooltip.selectAll('.tooltip-text')
-				.text(d => (+e.frequency).toFixed(2))
-				// .at('text-anchor', d => {
-				// 	let anchor = null
-				// 	if (e.year >= 1940 ) anchor = 'end'
-				// 	else if (e.year <= 1950 ) anchor = 'start'
-				// 	else anchor = 'middle'
-				// 	return anchor
-				// })
+				.text(d => ((+e.frequency)).toFixed(2))
 				.at('dx', d => {
 					let pos = null
-					if (e.year >= 1940 ) pos = -10
-					else if (e.year <= 1950 ) pos = 35
+					if (e.year >= 1940 ) pos = -20
+					else if (e.year <= 1950 ) pos = 25
 					return pos
 				})
 		}
@@ -174,7 +179,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				let maxX = d3.max(data, function (d) { return d.year; });
 				let minX = d3.min(data, function (d) { return d.year; });
-				maxY = d3.max(data, function (d) { return +d.frequency; });
+				maxY = d3.max(data, function (d) { return d.frequency; });
 
 				xScale = d3
 					.scaleLinear()
@@ -196,8 +201,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.axisLeft(yScale)
 					.tickPadding(8)
 					.ticks(5)
-					.tickSize(-width)
-					.tickFormat(d => d *100000);
+					.tickSize(-width);
 
 				$axis.select('.x')
 					.at('transform', `translate(${marginLeft},${axisPadding})`)
@@ -220,7 +224,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				tooltip = $svg.append('g').at('class', 'g-tooltip').st('display', 'none')
 				tooltip.append('circle').at('class', 'tooltip-circle').at('r', 5).at('transform', 'translate(' + marginLeft + ',' + marginTop + ')')
-				tooltip.append('text').at('class', 'tooltip-text').at('dy', 10).at('dx', 5)
+				tooltip.append('text').at('class', 'tooltip-text').at('dy', 20)
 
 				$svg.append('rect')
 					.at('width', width)
@@ -240,23 +244,24 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			update(word) {
 				let individWordData = dataByWord.filter(d => d.key === word)
 
-				maxY = d3.max(individWordData, function (d) {
-					return d.values[0].frequency;
-				});
-
+				maxY = d3.max(individWordData, function (d) { return d.maxFreq; });
 				yScale.domain([0, maxY])
 				$axis.select('.y').transition().duration(1000).call(yAxis)
 
 				drawLine
+					.defined(function (d) { return d; })
 					.y(function (d) { return yScale(d.frequency);})
 				drawArea
+					.defined(drawLine.defined())
 					.y0(height)
 					.y1(function (d) { return yScale(d.frequency);})
 
 				wordLine
 					.data(individWordData)
 					.transition().duration(1000)
-					.attr("d", function (d) { return drawLine(d.values); })
+					.attr('d', function (d) {
+						return drawLine(d.values)
+					})
 					.attr('class', function (d) { return `line line-${d.values[0].word}` });
 
 					wordAreas

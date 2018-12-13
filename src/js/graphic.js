@@ -42,8 +42,10 @@ function loadData() {
 				resolve(response)
 
 
-
 				areaChartData = response[0];
+        //changing frequency values for chart data; add cleaning to cleanData.js?
+        areaChartData.forEach(d => d.frequency = (d.frequency*100000))
+
 
 				wordCloudDataRaw = response[1];
 				wordsToInclude = response[3];

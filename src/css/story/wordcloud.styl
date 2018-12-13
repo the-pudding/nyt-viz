@@ -1,13 +1,21 @@
 .middle-chunk
-	max-width $column-width
-	margin 0 auto
-	width 100%
+	width calc(100% - 7rem)
+	position static
+	top 0
+	right 0
+	padding-right 2rem
+	+mq('bp-6')
+		margin 0 auto
+		position relative
+		max-width $column-width
+		width 50%
+		padding-right 0
 
 	.wordcloud-wrapper
 		border-left 1px solid
 		width 100%
 		margin 0 0 10rem 0
-		padding 0 2rem
+		padding 0 0 0 1rem
 
 		.decade-text
 
