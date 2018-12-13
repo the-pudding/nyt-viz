@@ -258,7 +258,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				wordLine
 					.data(individWordData)
-					.transition().duration(1000)
+					.transition().delay(500).duration(1000)
 					.attr('d', function (d) {
 						return drawLine(d.values)
 					})
@@ -266,7 +266,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 					wordAreas
 						.data(individWordData)
-						.transition().duration(1000)
+						.transition().delay(500).duration(1000)
 						.attr("d", function (d) { return drawArea(d.values); })
 						.attr('class', function (d) { return `area area-${d.values[0].word}` });
 
