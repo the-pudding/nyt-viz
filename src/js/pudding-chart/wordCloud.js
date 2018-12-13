@@ -95,7 +95,10 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.rotate(() => 0)
 				.fontSize((d, i) => fontSize(d.overindex))
 				// .fontSize((d, i) => fontSize(Math.random()))
-				.text(d => d.word)
+				.text(d => d.word.toLowerCase()
+					.split(' ')
+					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+					.join(' '))
 				.spiral("rectangular")
 				.on("end", draw)
 				.start()
@@ -114,7 +117,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.style('font-size', d => `${d.size}px`)
 				.at('text-anchor', 'middle')
 				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
-				.text(d => d.text.toLowerCase()
+				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
@@ -129,7 +132,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					clickedWord.classed('clickedWord', true)
 
 					// setting overindex % text in sidebar
-					console.log(d)
 					$mentions.text(decadeOverindex + 'x')
 
 					// Update article text
@@ -161,7 +163,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 							const stringdIndex = lowerPara.indexOf(wordCloudWord.toLowerCase());
 							const endIndex = stringdIndex + findLength;
 							let editedPara = example.para.slice(0, stringdIndex) + '<b>' + example.para.slice(stringdIndex, endIndex) + '</b>' + example.para.slice(endIndex);
-							return editedPara
+							return editedPara.slice(0, 100) + '...'
 						})
 
 
