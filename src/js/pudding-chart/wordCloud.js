@@ -181,7 +181,11 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 					areaChartRef.update(wordCloudWord)
 
-					d3.select('.sidebar').transition().duration(500).st('opacity', 1)
+					const $sidebar = d3.select('.sidebar');
+					const $toggle = d3.select('.drawer__toggle');
+					const visible = $sidebar.classed('is-visible');
+					$sidebar.classed('is-visible', !visible);
+					$toggle.classed('is-visible', !visible);
 				})
 		}
 

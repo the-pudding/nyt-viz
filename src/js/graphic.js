@@ -52,8 +52,8 @@ function loadData() {
 
 				wordCloudDataFiltered = cleanData.filterWordCloud(wordCloudDataRaw, wordsToInclude)
 
-				console.log(response[1])
-				console.log(wordCloudDataFiltered)
+				//console.log(response[1])
+				//console.log(wordCloudDataFiltered)
 
 
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(wordCloudDataFiltered);
@@ -110,7 +110,7 @@ function handleNavSelection() {
 
 function scrollTo(element) {
 	const h = window.innerHeight
-	console.log(h, element.offsetTop)
+	//console.log(h, element.offsetTop)
 	window.scroll({
 		behavior: 'smooth',
 		left: 0,
@@ -126,9 +126,36 @@ function handleNavClick() {
 			const el = d3.select(`.wordcloud-${decadeClick}`).node()
 			scrollTo(el);
 		})
-	//const { value } = this;
-	//const el = d3.select(`#${value}-link`).node();
-	//scrollTo(el);
+}
+
+// function setupSidebarDrawer() {
+// 	const $sidebar = d3.select('.sidebar');
+// 	const $drawer = d3.select('.drawer');
+// 	const $toggle = d3.select('.drawer__toggle');
+// 	if ($sidebar.classed('is-visible', false)) {
+// 		$toggle.on('click', () => {
+// 			$sidebar.classed('is-visible', true)
+// 			$toggle.classed('is-visible', true);
+// 		});
+// 	}
+// 	else {
+// 		console.log("checking")
+// 		$toggle.on('click', () => {
+// 			$sidebar.classed('is-visible', false)
+// 			$toggle.classed('is-visible', false);
+// 		});
+// 	}
+// }
+
+function setupSidebarDrawer() {
+	const $sidebar = d3.select('.sidebar');
+	const $toggle = d3.select('.drawer__toggle');
+
+	$toggle.on('click', () => {
+		const visible = $sidebar.classed('is-visible');
+		$sidebar.classed('is-visible', !visible);
+		$toggle.classed('is-visible', !visible);
+	});
 }
 
 function init() {
@@ -140,6 +167,7 @@ function init() {
 				setUpWordCloud();
 				handleNavSelection();
 				handleNavClick();
+				setupSidebarDrawer();
 			})
 	})
 
