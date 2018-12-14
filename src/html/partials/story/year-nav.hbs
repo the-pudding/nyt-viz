@@ -4,14 +4,11 @@
 			<div class='decade-height'>
 				<p class='decade decade-{{{decade}}} tk-national'>{{decade}}s</p>
 			</div>
-			<div class='dots'></div>
+			{{#if @last}}
+				<div></div>
+				{{else}}
+				<div class='dots'></div>
+			{{/if}}
 		</div>
-		{{#if @last}}
-			<div class='decade-wrapper'>
-				<div class='decade-height'>
-					<p class='decade decade-{{{decade}}} tk-national'>{{decade}}s</p>
-				</div>
-			</div>
-		{{/if}}
 	{{/each}}
 </div>

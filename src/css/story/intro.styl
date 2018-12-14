@@ -106,25 +106,30 @@
 		justify-content center
 		font-weight 500
 		color darken($dark-tan, 10)
-		+mq('bp-2-5')
+		+mq('bp-3-5')
 			flex-direction row
 
 		p
-			margin 0
-			+mq('bp-2-5')
-					margin 1.5rem 0
+			margin 0 0 0.5rem 0
+			+mq('bp-3-5')
+					margin 1.5rem 0 0 0
 
 		.logo
 			width 200px
 			margin 0 auto
 			padding 0
-			+mq('bp-2-5')
+			+mq('bp-3-5')
 				margin 0
-				padding 1.3rem 0 0 0.5rem
+				padding 1.75rem 0 0 0.5rem
 
 			svg
 				width 100%
-				fill darken($dark-tan, 10)
+
+		.pudding-logo
+			width 140px
+
+			svg
+				width 100%
 
 		.prose
 			max-width 40rem

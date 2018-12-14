@@ -107,22 +107,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			return layout;
 		}
 
-
-		function draw(words) {
-			$wordcloud.selectAll("text")
-				.data(words)
-				.enter()
-				.append('text')
-				.at('class', 'word')
-				.at('data-attribute', d => d.word)
-				.style('font-size', d => `${d.size}px`)
-				.at('text-anchor', 'middle')
-				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
-				.text(d => d.word.toLowerCase()
-					.split(' ')
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(' '))
-				.on('click', d => {
+		function handleWordClick(d) {
 					const wordCloudWord = d.word;
 					const decadeOverindex = d.overindex.toString().slice(0, 3);
 					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
@@ -186,8 +171,27 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					const visible = $sidebar.classed('is-visible');
 					$sidebar.classed('is-visible', !visible);
 					$toggle.classed('is-visible', !visible);
-				})
 		}
+
+		function draw(words) {
+			$wordcloud.selectAll("text")
+				.data(words)
+				.enter()
+				.append('text')
+				.at('class', 'word')
+				.at('data-attribute', d => d.word)
+				.style('font-size', d => `${d.size}px`)
+				.at('text-anchor', 'middle')
+				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
+				.text(d => d.word.toLowerCase()
+					.split(' ')
+					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+					.join(' '))
+				.on('click', handleWordClick)
+
+		}
+
+
 
 		const Chart = {
 			// called once at start
@@ -209,6 +213,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				$vis = $g.append('g.g-vis');
 
 				Chart.resize();
+
+				const initWord = d3.selectAll(`[data-attribute="boer"]`)
+				initWord.classed('clickedWord', true)
 
 				createCloudLayout(width, height, tags)
 

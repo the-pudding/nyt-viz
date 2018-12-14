@@ -22,21 +22,21 @@
 			+mq('bp-2-5')
 				height 2.5rem
 
-			.current
-				font-weight 700 !important
-				font-size 20px !important
-				margin-top -0.5rem !important
-				+mq('bp-2-5')
-					set-type-size(large)
-
 			.decade
 				margin 0
 				font-weight 500
 				set-type-size(small)
-				&:hover
-					font-weight 700
 				+mq('bp-2-5')
 					set-type-size(root)
+				&:hover
+					font-weight 700
+
+			.current
+				font-weight 700 !important
+				font-size 20px 
+				margin-top -0.5rem !important
+				+mq('bp-2-5')
+					set-type-size(large) !important
 
 		.dots
 			transform rotate(90deg)
@@ -47,7 +47,7 @@
 				letter-spacing 2px
 				position absolute
 				bottom -0.5rem
-				left 1rem
+				left 1.25rem
 			+mq('bp-2-5')
 					margin 1rem 0
 
@@ -57,4 +57,4 @@
 				set-type-size(xxx-small)
 				letter-spacing 4px
 				bottom -0.5rem
-				left 0.6rem
+				left 1.25rem

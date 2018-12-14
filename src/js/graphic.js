@@ -103,6 +103,21 @@ function handleNavSelection() {
 			matchingNav.classed('current', true)
 			el.classList.remove('entered');
 		},
+		offset: 0.75, // enter at middle of viewport
+		once: false, // trigger every time
+	});
+}
+
+function showDrawer() {
+	const $drawer = d3.select('.drawer')
+	enterView({
+		selector: '#decades',
+		enter: function (el) {
+			$drawer.classed('is-visible', true)
+		},
+		exit: function (el) {
+			$drawer.classed('is-visible', false)
+		},
 		offset: 0.5, // enter at middle of viewport
 		once: false, // trigger every time
 	});
@@ -110,11 +125,14 @@ function handleNavSelection() {
 
 function scrollTo(element) {
 	const h = window.innerHeight
-	//console.log(h, element.offsetTop)
+	const elHeight = element.clientHeight
+	const offset = element.offsetTop
+	console.log(h, elHeight, offset)
+	console.log((elHeight*2) + offset)
 	window.scroll({
 		behavior: 'smooth',
 		left: 0,
-		top: element.offsetTop + 750
+		top: (elHeight*3.6) + offset
 	});
 }
 
@@ -123,29 +141,11 @@ function handleNavClick() {
 	decades
 		.on('click', function () {
 			const decadeClick = d3.select(this).text().split('s')[0]
+			console.log(decadeClick)
 			const el = d3.select(`.wordcloud-${decadeClick}`).node()
 			scrollTo(el);
 		})
 }
-
-// function setupSidebarDrawer() {
-// 	const $sidebar = d3.select('.sidebar');
-// 	const $drawer = d3.select('.drawer');
-// 	const $toggle = d3.select('.drawer__toggle');
-// 	if ($sidebar.classed('is-visible', false)) {
-// 		$toggle.on('click', () => {
-// 			$sidebar.classed('is-visible', true)
-// 			$toggle.classed('is-visible', true);
-// 		});
-// 	}
-// 	else {
-// 		console.log("checking")
-// 		$toggle.on('click', () => {
-// 			$sidebar.classed('is-visible', false)
-// 			$toggle.classed('is-visible', false);
-// 		});
-// 	}
-// }
 
 function setupSidebarDrawer() {
 	const $sidebar = d3.select('.sidebar');
@@ -167,6 +167,7 @@ function init() {
 				setUpWordCloud();
 				handleNavSelection();
 				handleNavClick();
+				showDrawer();
 				setupSidebarDrawer();
 			})
 	})

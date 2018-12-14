@@ -1,12 +1,13 @@
 .sidebar
-	width calc(100% - 7rem)
+	width calc(100% - 5.7rem)
 	display flex
 	align-self flex-start
 	flex-direction column
 	padding 0 2rem 0 1rem
 	margin-left 0
-	position sticky
-	top 3.5rem
+	position fixed
+	top 3rem
+	flex-grow 0
 	right 0
 	transform translateX(100%)
 	height 100vh
@@ -14,6 +15,7 @@
 	border-left 1px solid $off-black
 	transition transform 400ms ease-in-out
 	+mq('bp-6')
+		position sticky
 		top 5rem
 		right 0
 		width 20rem
@@ -34,9 +36,15 @@
 		left -3.5rem
 		top 1rem
 		border-radius 0.5rem 0 0 0.5rem
+		transform translateX(100%)
+		transition transform 400ms ease-in-out
 		+mq('bp-6')
 			display none
 			pointer-events none
+
+		&.is-visible
+			transform translateX(0)
+			transition transform 400ms ease-in-out
 
 		.drawer__toggle
 			position relative
