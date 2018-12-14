@@ -1,5 +1,5 @@
 .sidebar
-	width calc(100% - 4rem)
+	width calc(100% - 7rem)
 	display flex
 	align-self flex-start
 	flex-direction column
@@ -14,14 +14,15 @@
 	border-left 1px solid $off-black
 	transition transform 400ms ease-in-out
 	+mq('bp-6')
-		width 20rem
 		top 5rem
+		right 0
+		width 20rem
 		margin-left 2rem
 		transform translateX(0)
 		border-left 0
 
 	&.is-visible
-		transform translateX(0 - 0.8rem)
+		transform translateX(0)
 		transition transform 400ms ease-in-out
 
 	.drawer

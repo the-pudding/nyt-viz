@@ -9,6 +9,15 @@
 	margin 0 auto
 	padding 2.5rem 1rem 1.5rem 1rem
 
+	.hed-block
+		max-width $column-width
+		margin 0 auto
+		padding 0 0.5rem
+		+mq('bp-2-5')
+			padding 0 1rem
+		+mq('bp-6')
+			max-width none
+
 	&__hed
 		max-width 50rem
 		margin 0 auto
@@ -22,8 +31,23 @@
 			set-type-size('xxxx-large', true)
 
 	.hedA
-		padding 0 0 1rem 0
-		font-size 4.2rem
+		font-size 1.25rem
+		padding 0 0 0.5rem 0
+		+mq('bp-2-5')
+			font-size 1.5rem
+			padding 0 0 0.5rem 0
+		+mq('bp-3')
+			font-size 1.9rem
+			padding 0 0 0.5rem 0
+		+mq('bp-3-5')
+			font-size 2.55rem
+			padding 0 0 0.5rem 0
+		+mq('bp-4-5')
+			font-size 3.2rem
+			padding 0 0 0.75rem 0
+		+mq('bp-6')
+			padding 0 0 1rem 0
+			font-size 4.2rem
 
 	.hedB
 		font-weight 900
@@ -31,12 +55,37 @@
 		padding 0
 		border-top 1px solid $off-black
 		border-bottom 1px solid $off-black
-		font-size 10.65rem
+		font-size 3.5rem
 		text-transform uppercase
+		+mq('bp-2-5')
+			font-size 4.45rem
+		+mq('bp-3')
+			font-size 5rem
+		+mq('bp-3-5')
+			font-size 6.5rem
+		+mq('bp-4-5')
+			font-size 8.1rem
+		+mq('bp-6')
+			font-size 10.65rem
 
 	.hedC
-		padding 0.5rem 0 0 0
-		font-size 2.375rem
+		font-size 1.25rem
+		padding 0.5rem 2rem 0 2rem
+		+mq('bp-2-5')
+			font-size 1.5rem
+			padding 0.5rem 2rem 0 2rem
+		+mq('bp-3')
+			padding 0.5rem 3rem 0 3rem
+			font-size 1.7rem
+		+mq('bp-3-5')
+			padding 0.5rem 0 0 0
+			font-size 1.45rem
+		+mq('bp-4-5')
+			padding 0.5rem 0 0 0
+			font-size 1.82rem
+		+mq('bp-6')
+			font-size 2.375rem
+			padding 0.5rem 0 0 0
 
 	&__byline
 		max-width $column-width
@@ -49,18 +98,29 @@
 	&__dek
 		max-width $column-width
 		margin 0 auto
-		padding-top 2.5rem
+		padding 2.5rem 0 0 0
 		text-align center
 		set-type-size('medium', true)
 		display flex
+		flex-direction column
 		justify-content center
 		font-weight 500
 		color darken($dark-tan, 10)
+		+mq('bp-2-5')
+			flex-direction row
+
+		p
+			margin 0
+			+mq('bp-2-5')
+					margin 1.5rem 0
 
 		.logo
 			width 200px
-			margin 0
-			padding 1.3rem 0 0 0.5rem
+			margin 0 auto
+			padding 0
+			+mq('bp-2-5')
+				margin 0
+				padding 1.3rem 0 0 0.5rem
 
 			svg
 				width 100%
