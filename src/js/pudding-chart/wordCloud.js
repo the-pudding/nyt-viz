@@ -107,6 +107,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			return layout;
 		}
 
+
 		function handleWordClick(d) {
 					const wordCloudWord = d.word;
 					const decadeOverindex = d.overindex.toString().slice(0, 3);
@@ -199,8 +200,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
 				$wordcloud = $svg.append("g").at('class', d => `word-cloud ${d.key}`)
 
-
-
 				const $g = $svg.append('g');
 
 				// offset chart for margins
@@ -225,10 +224,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			resize() {
 				// defaults to grabbing dimensions from container element
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
+				console.log('new width: ' + width)
 
 				height = $sel.node().offsetHeight - marginTop - marginBottom;
-
-
 
 				$svg.at({
 					width: width + marginLeft + marginRight,
@@ -238,7 +236,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				$wordcloud
 					.at("transform", `translate(${width / 2},${height / 2})`);
 
-
+				createCloudLayout(width, height, tags)
 
 				return Chart;
 			},
