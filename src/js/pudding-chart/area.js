@@ -50,8 +50,12 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		// helper functions
 		function nestData() {
 			dataByWord = d3.nest()
-				.key(function (d) { return d.word; })
-				.sortValues(function (a, b) { return a.year - b.year; })
+				.key(function (d) {
+					return d.word;
+				})
+				.sortValues(function (a, b) {
+					return a.year - b.year;
+				})
 				.entries(data)
 				.map(d => {
 					const values = d3.range(1900, 2020, 10).map(y => {
@@ -73,14 +77,14 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 						return f.frequency
 					})
 					let maxFreq = d3.max(freqValues)
-					return  {
+					return {
 						...d,
 						maxFreq: maxFreq
 					}
 				})
 		}
 
-		function handleMouseMove(d){
+		function handleMouseMove(d) {
 			const selected = d3.selectAll('.line')
 			const highlighted = selected.data()
 			const currWordData = highlighted[0].values
@@ -100,8 +104,8 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				.text(d => ((+e.frequency)).toFixed(2))
 				.at('dx', d => {
 					let pos = null
-					if (e.year >= 1940 ) pos = -20
-					else if (e.year <= 1950 ) pos = 25
+					if (e.year >= 1940) pos = -20
+					else if (e.year <= 1950) pos = 25
 					return pos
 				})
 		}
@@ -140,32 +144,50 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				wordAreas = $vis.selectAll('.wordArea')
 					.data(initData)
 					.enter().append('path')
-					.attr('class', function (d) { return `area area-${d.values[0].word}` })
+					.attr('class', function (d) {
+						return `area area-${d.values[0].word}`
+					})
 					.style("fill", t.url());
 
 				// append line
 				wordLine = $vis.selectAll('.wordLine')
 					.data(initData)
 					.enter().append('path')
-					.attr('class', function (d) { return `line line-${d.values[0].word}`})
+					.attr('class', function (d) {
+						return `line line-${d.values[0].word}`
+					})
 
-					drawLine = d3.line()
-						.defined(function (d) { return d; })
-						.x(function (d) { return xScale(d.year); })
-						.y(function (d) { return yScale(d.frequency); })
+				drawLine = d3.line()
+					.defined(function (d) {
+						return d;
+					})
+					.x(function (d) {
+						return xScale(d.year);
+					})
+					.y(function (d) {
+						return yScale(d.frequency);
+					})
 
-					wordLine
-						.attr("d", function (d) { return drawLine(d.values); })
+				wordLine
+					.attr("d", function (d) {
+						return drawLine(d.values);
+					})
 
-					// define the area
-					drawArea = d3.area()
-						.defined(drawLine.defined())
-						.x(function (d) { return xScale(d.year); })
-						.y0(height)
-						.y1(function (d) { return yScale(d.frequency); });
+				// define the area
+				drawArea = d3.area()
+					.defined(drawLine.defined())
+					.x(function (d) {
+						return xScale(d.year);
+					})
+					.y0(height)
+					.y1(function (d) {
+						return yScale(d.frequency);
+					});
 
-					wordAreas
-						.attr("d", function (d) { return drawArea(d.values); })
+				wordAreas
+					.attr("d", function (d) {
+						return drawArea(d.values);
+					})
 
 				Chart.resize();
 				Chart.render();
@@ -177,9 +199,15 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				height = $sel.node().offsetHeight - marginTop - marginBottom;
 				axisPadding = height;
 
-				let maxX = d3.max(data, function (d) { return d.year; });
-				let minX = d3.min(data, function (d) { return d.year; });
-				maxY = d3.max(data, function (d) { return d.frequency; });
+				let maxX = d3.max(data, function (d) {
+					return d.year;
+				});
+				let minX = d3.min(data, function (d) {
+					return d.year;
+				});
+				maxY = d3.max(data, function (d) {
+					return d.frequency;
+				});
 
 				xScale = d3
 					.scaleLinear()
@@ -245,17 +273,25 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			update(word) {
 				let individWordData = dataByWord.filter(d => d.key === word)
 
-				maxY = d3.max(individWordData, function (d) { return d.maxFreq; });
+				maxY = d3.max(individWordData, function (d) {
+					return d.maxFreq;
+				});
 				yScale.domain([0, maxY])
 				$axis.select('.y').transition().duration(1000).call(yAxis)
 
 				drawLine
-					.defined(function (d) { return d; })
-					.y(function (d) { return yScale(d.frequency);})
+					.defined(function (d) {
+						return d;
+					})
+					.y(function (d) {
+						return yScale(d.frequency);
+					})
 				drawArea
 					.defined(drawLine.defined())
 					.y0(height)
-					.y1(function (d) { return yScale(d.frequency);})
+					.y1(function (d) {
+						return yScale(d.frequency);
+					})
 
 				wordLine
 					.data(individWordData)
@@ -263,13 +299,19 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.attr('d', function (d) {
 						return drawLine(d.values)
 					})
-					.attr('class', function (d) { return `line line-${d.values[0].word}` });
+					.attr('class', function (d) {
+						return `line line-${d.values[0].word}`
+					});
 
-					wordAreas
-						.data(individWordData)
-						.transition().delay(500).duration(1000)
-						.attr("d", function (d) { return drawArea(d.values); })
-						.attr('class', function (d) { return `area area-${d.values[0].word}` });
+				wordAreas
+					.data(individWordData)
+					.transition().delay(500).duration(1000)
+					.attr("d", function (d) {
+						return drawArea(d.values);
+					})
+					.attr('class', function (d) {
+						return `area area-${d.values[0].word}`
+					});
 
 
 			},

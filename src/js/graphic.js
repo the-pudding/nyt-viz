@@ -18,13 +18,19 @@ let wordCloudDataJoined;
 let wordsToInclude;
 
 let wordArea = null;
+let wordCloudCharts = null;
 
 //selections
 const $freqChart = d3.select('.chart-wrapper')
 const $wordCloudContainers = d3.selectAll('.wordcloud-wrapper')
 
 
-function resize() {}
+function resize() {
+
+	wordCloudCharts.forEach(chart => chart.resize())
+
+	wordArea.resize()
+}
 
 function loadData() {
 	return new Promise((resolve, reject) => {
@@ -41,25 +47,18 @@ function loadData() {
 			} else {
 				resolve(response)
 
-
 				areaChartData = response[0];
-        //changing frequency values for chart data; add cleaning to cleanData.js?
-        areaChartData.forEach(d => d.frequency = (d.frequency*100000))
 
+				//changing frequency values for chart data; add cleaning to cleanData.js?
+				areaChartData.forEach(d => d.frequency = (d.frequency * 100000))
 
 				wordCloudDataRaw = response[1];
 				wordsToInclude = response[3];
 
 				wordCloudDataFiltered = cleanData.filterWordCloud(wordCloudDataRaw, wordsToInclude)
-
-				console.log(response[1])
-				console.log(wordCloudDataFiltered)
-
-
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(wordCloudDataFiltered);
 
 				wordCloudDataAreaData = cleanData.joinWordsToFrequencies(areaChartData, wordCloudDataNested)
-
 
 				// Loading+formatting article data
 				exampleArticleData = response[2];
@@ -67,7 +66,7 @@ function loadData() {
 
 				// Joining articles to word decades
 				wordCloudDataJoined = cleanData.joinWordsToArticles(formattedArticleData, wordCloudDataAreaData);
-				//console.log(wordCloudDataJoined)
+
 			}
 		})
 	})
@@ -80,7 +79,7 @@ function setUpFreqChart() {
 }
 
 function setUpWordCloud() {
-	const wordCloudCharts = $wordCloudContainers
+	wordCloudCharts = $wordCloudContainers
 		.data(wordCloudDataJoined)
 		.puddingChartWordCloud()
 	wordCloudCharts.forEach(w => w.area(wordArea))
