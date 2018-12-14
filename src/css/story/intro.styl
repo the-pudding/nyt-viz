@@ -1,11 +1,18 @@
+.hero
+	margin 0
+	padding-top 3rem
+
+	&__img
+		width 100%
+
 .intro
 	margin 0 auto
-	padding 4rem 1rem 1.5rem 1rem
+	padding 2.5rem 1rem 1.5rem 1rem
 
 	&__hed
-		max-width 60rem
+		max-width 50rem
 		margin 0 auto
-		padding-top 5rem
+		//padding-top 5rem
 		font-weight 400
 		text-align center
 		set-type-size('xx-large', true)
@@ -13,6 +20,23 @@
 			set-type-size('xxx-large', true)
 		+mq('bp-5')
 			set-type-size('xxxx-large', true)
+
+	.hedA
+		padding 0 0 1rem 0
+		font-size 4.2rem
+
+	.hedB
+		font-weight 900
+		line-height 1
+		padding 0
+		border-top 1px solid $off-black
+		border-bottom 1px solid $off-black
+		font-size 10.65rem
+		text-transform uppercase
+
+	.hedC
+		padding 0.5rem 0 0 0
+		font-size 2.375rem
 
 	&__byline
 		max-width $column-width
@@ -25,9 +49,22 @@
 	&__dek
 		max-width $column-width
 		margin 0 auto
-		padding-top 1.5rem
+		padding-top 2.5rem
 		text-align center
 		set-type-size('medium', true)
+		display flex
+		justify-content center
+		font-weight 500
+		color darken($dark-tan, 10)
+
+		.logo
+			width 200px
+			margin 0
+			padding 1.3rem 0 0 0.5rem
+
+			svg
+				width 100%
+				fill darken($dark-tan, 10)
 
 		.prose
 			max-width 40rem
