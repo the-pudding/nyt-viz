@@ -56,6 +56,7 @@ function loadData() {
 				wordsToInclude = response[3];
 
 				wordCloudDataFiltered = cleanData.filterWordCloud(wordCloudDataRaw, wordsToInclude)
+
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(wordCloudDataFiltered);
 
 				wordCloudDataAreaData = cleanData.joinWordsToFrequencies(areaChartData, wordCloudDataNested)
@@ -102,6 +103,21 @@ function handleNavSelection() {
 			matchingNav.classed('current', true)
 			el.classList.remove('entered');
 		},
+		offset: 0.75, // enter at middle of viewport
+		once: false, // trigger every time
+	});
+}
+
+function showDrawer() {
+	const $drawer = d3.select('.drawer')
+	enterView({
+		selector: '#decades',
+		enter: function (el) {
+			$drawer.classed('is-visible', true)
+		},
+		exit: function (el) {
+			$drawer.classed('is-visible', false)
+		},
 		offset: 0.5, // enter at middle of viewport
 		once: false, // trigger every time
 	});
@@ -109,11 +125,14 @@ function handleNavSelection() {
 
 function scrollTo(element) {
 	const h = window.innerHeight
-	console.log(h, element.offsetTop)
+	const elHeight = element.clientHeight
+	const offset = element.offsetTop
+	console.log(h, elHeight, offset)
+	console.log((elHeight*2) + offset)
 	window.scroll({
 		behavior: 'smooth',
 		left: 0,
-		top: element.offsetTop + 750
+		top: (elHeight*3.6) + offset
 	});
 }
 
@@ -122,12 +141,21 @@ function handleNavClick() {
 	decades
 		.on('click', function () {
 			const decadeClick = d3.select(this).text().split('s')[0]
+			console.log(decadeClick)
 			const el = d3.select(`.wordcloud-${decadeClick}`).node()
 			scrollTo(el);
 		})
-	//const { value } = this;
-	//const el = d3.select(`#${value}-link`).node();
-	//scrollTo(el);
+}
+
+function setupSidebarDrawer() {
+	const $sidebar = d3.select('.sidebar');
+	const $toggle = d3.select('.drawer__toggle');
+
+	$toggle.on('click', () => {
+		const visible = $sidebar.classed('is-visible');
+		$sidebar.classed('is-visible', !visible);
+		$toggle.classed('is-visible', !visible);
+	});
 }
 
 function init() {
@@ -139,6 +167,8 @@ function init() {
 				setUpWordCloud();
 				handleNavSelection();
 				handleNavClick();
+				showDrawer();
+				setupSidebarDrawer();
 			})
 	})
 

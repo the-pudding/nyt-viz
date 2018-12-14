@@ -115,6 +115,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			init() {
 				nestData()
 				const initData = dataByWord.filter(d => d.key === 'boer')
+				maxY = d3.max(initData, function (d) { return d.maxFreq; });
 
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');
@@ -157,37 +158,6 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 						return `line line-${d.values[0].word}`
 					})
 
-				drawLine = d3.line()
-					.defined(function (d) {
-						return d;
-					})
-					.x(function (d) {
-						return xScale(d.year);
-					})
-					.y(function (d) {
-						return yScale(d.frequency);
-					})
-
-				wordLine
-					.attr("d", function (d) {
-						return drawLine(d.values);
-					})
-
-				// define the area
-				drawArea = d3.area()
-					.defined(drawLine.defined())
-					.x(function (d) {
-						return xScale(d.year);
-					})
-					.y0(height)
-					.y1(function (d) {
-						return yScale(d.frequency);
-					});
-
-				wordAreas
-					.attr("d", function (d) {
-						return drawArea(d.values);
-					})
 
 				Chart.resize();
 				Chart.render();
@@ -199,15 +169,10 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				height = $sel.node().offsetHeight - marginTop - marginBottom;
 				axisPadding = height;
 
-				let maxX = d3.max(data, function (d) {
-					return d.year;
-				});
-				let minX = d3.min(data, function (d) {
-					return d.year;
-				});
-				maxY = d3.max(data, function (d) {
-					return d.frequency;
-				});
+
+				let maxX = d3.max(data, function (d) { return d.year; });
+				let minX = d3.min(data, function (d) { return d.year; });
+
 
 				xScale = d3
 					.scaleLinear()
@@ -222,8 +187,8 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				xAxis = d3
 					.axisBottom(xScale)
 					.tickPadding(8)
-					//.tickValues([minX, maxX])
-					.tickValues(xScale.ticks(5).concat(xScale.domain()))
+					.tickValues(['1910', '1930', '1950', '1970', '1990', '2010'])
+					//.tickValues(xScale.ticks(5))
 					.tickFormat(d3.format("d"));
 
 				yAxis = d3
@@ -263,6 +228,24 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.on('mouseover', () => tooltip.st('display', null))
 					.on('mouseout', () => tooltip.st('display', 'none'))
 					.on('mousemove touchstart', handleMouseMove)
+
+									drawLine = d3.line()
+						.defined(function (d) { return d; })
+						.x(function (d) { return xScale(d.year); })
+						.y(function (d) { return yScale(d.frequency); })
+
+					wordLine
+						.attr("d", function (d) { return drawLine(d.values); })
+
+					// define the area
+					drawArea = d3.area()
+						.defined(drawLine.defined())
+						.x(function (d) { return xScale(d.year); })
+						.y0(height)
+						.y1(function (d) { return yScale(d.frequency); });
+
+					wordAreas
+						.attr("d", function (d) { return drawArea(d.values); })
 
 				return Chart;
 			},

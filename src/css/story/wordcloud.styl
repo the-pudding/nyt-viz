@@ -1,14 +1,16 @@
 .middle-chunk
 	width calc(100% - 7rem)
 	position static
+	align-self flex-start
 	top 0
 	right 0
+	margin -1.5rem 0 0 0
 	padding-right 2rem
 	+mq('bp-6')
-		margin 0 auto
+		margin -1.5rem auto 0 auto
 		position relative
+		width 100%
 		max-width $column-width
-		width 50%
 		padding-right 0
 
 
@@ -54,8 +56,7 @@
 				font-family $national
 				font-weight 700
 				text-transform uppercase
-				&:hover
-					fill $off-black
+				pointer-events none
 
 			text
 				font-family $tiempos
