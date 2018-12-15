@@ -148,11 +148,12 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.append('p.hed-text')
 				// .text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
 				.html(example => {
+					const exampleYear = example.year.slice(0, 4);
 					let lowerPara = example.headline_russell.toLowerCase();
 					const findLength = wordCloudWord.length
 					const stringdIndex = lowerPara.indexOf(wordCloudWord.toLowerCase());
 					const endIndex = stringdIndex + findLength;
-					let editedPara = example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
+					let editedPara = '<span class="year-example">' + exampleYear + '</span>' + ': ' + example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
 					return editedPara.slice(0, 100) + '...'
 				})
 
