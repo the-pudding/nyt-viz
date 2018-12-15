@@ -63,6 +63,7 @@ function loadData() {
 
 				// Loading+formatting article data
 				exampleArticleData = response[2];
+				console.log(exampleArticleData)
 				formattedArticleData = cleanData.formatArticles(exampleArticleData);
 
 				// Joining articles to word decades
@@ -128,11 +129,11 @@ function scrollTo(element) {
 	const elHeight = element.clientHeight
 	const offset = element.offsetTop
 	console.log(h, elHeight, offset)
-	console.log((elHeight*2) + offset)
+	console.log((elHeight * 2) + offset)
 	window.scroll({
 		behavior: 'smooth',
 		left: 0,
-		top: (elHeight*3.6) + offset
+		top: (elHeight * 3.6) + offset
 	});
 }
 

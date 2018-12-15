@@ -18,7 +18,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const wordFrequencies = data.areaData;
 
 
-		//console.log(tags)
+		// console.log(articles)
 
 		// dimension stuff
 		let width = 0;
@@ -109,69 +109,71 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 
 		function handleWordClick(d) {
-					const wordCloudWord = d.word;
-					const decadeOverindex = d.overindex.toString().slice(0, 3);
-					const relevantArticleData = shuffle(articles.filter(row => row.term === wordCloudWord).slice(0, 3))
+			const currentYear = d.year;
+			const wordCloudWord = d.word;
+			const decadeOverindex = d.overindex.toString().slice(0, 3);
+			const relevantArticleData = shuffle(articles.filter(row => (row.term === wordCloudWord) && (row.decade === currentYear)).slice(0, 3))
 
-					//highlight clicked word
-					d3.selectAll('.word').classed('clickedWord', false)
-					const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
-					clickedWord.classed('clickedWord', true)
+			console.log(relevantArticleData)
+			//highlight clicked word
+			d3.selectAll('.word').classed('clickedWord', false)
+			const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
+			clickedWord.classed('clickedWord', true)
 
-					// setting overindex % text in sidebar
-					$word.text(wordCloudWord.toUpperCase())
-					$mentions.text(decadeOverindex + 'x')
+			// setting overindex % text in sidebar
+			$word.text(wordCloudWord.toUpperCase())
+			$mentions.text(decadeOverindex + 'x')
 
-					// Update article text
-					$headlineContainer
-						.selectAll('div.headline')
-						.remove()
+			// Update article text
+			$headlineContainer
+				.selectAll('div.headline')
+				.remove()
 
-					const headlineData = $headlineContainer
-						.selectAll('div.headline')
-						.data(relevantArticleData)
-						.enter()
+			const headlineData = $headlineContainer
+				.selectAll('div.headline')
+				.data(relevantArticleData)
+				.enter()
 
-					const $headlines = headlineData
-						.append('div.headline')
+			const $headlines = headlineData
+				.append('div.headline')
 
-					// Para numbers
-					$headlines
-						.append('p.hed-num tk-national')
-						.text((d, i) => i + 1)
-
-
-					// Headline text
-					$headlines
-						.append('p.hed-text')
-						// .text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
-						.html(example => {
-							let lowerPara = example.para.toLowerCase();
-							const findLength = wordCloudWord.length
-							const stringdIndex = lowerPara.indexOf(wordCloudWord.toLowerCase());
-							const endIndex = stringdIndex + findLength;
-							let editedPara = example.para.slice(0, stringdIndex) + '<b>' + example.para.slice(stringdIndex, endIndex) + '</b>' + example.para.slice(endIndex);
-							return editedPara.slice(0, 100) + '...'
-						})
+			// Para numbers
+			$headlines
+				.append('p.hed-num tk-national')
+				.text((d, i) => i + 1)
 
 
+			// Headline text
+			$headlines
+				.append('p.hed-text')
+				// .text(example => example.para.length > 100 ? `${example.para.slice(0, 100)}...` : example.para)
+				.html(example => {
+					let lowerPara = example.headline_russell.toLowerCase();
+					const findLength = wordCloudWord.length
+					const stringdIndex = lowerPara.indexOf(wordCloudWord.toLowerCase());
+					const endIndex = stringdIndex + findLength;
+					let editedPara = example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
+					return editedPara.slice(0, 100) + '...'
+				})
 
-					// Update area chart
-					relevantWordFrequencies = wordFrequencies.filter(term => term.word === wordCloudWord)
-						.map(word => ({
-							...word,
-							frequency: +word.frequency,
-							year: +word.year,
-							decadeString: `dec_${word.year}`
-						}))
 
-					areaChartRef.update(wordCloudWord)
 
-					const $sidebar = d3.select('.sidebar');
-					const $toggle = d3.select('.drawer__toggle');
-					const visible = $sidebar.classed('is-visible');
-					$sidebar.classed('is-visible', !visible);
-					$toggle.classed('is-visible', !visible);
+			// Update area chart
+			relevantWordFrequencies = wordFrequencies.filter(term => term.word === wordCloudWord)
+				.map(word => ({
+					...word,
+					frequency: +word.frequency,
+					year: +word.year,
+					decadeString: `dec_${word.year}`
+				}))
+
+			areaChartRef.update(wordCloudWord)
+
+			const $sidebar = d3.select('.sidebar');
+			const $toggle = d3.select('.drawer__toggle');
+			const visible = $sidebar.classed('is-visible');
+			$sidebar.classed('is-visible', !visible);
+			$toggle.classed('is-visible', !visible);
 		}
 
 		function draw(words) {
@@ -224,7 +226,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			resize() {
 				// defaults to grabbing dimensions from container element
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
-				console.log('new width: ' + width)
 
 				height = $sel.node().offsetHeight - marginTop - marginBottom;
 
