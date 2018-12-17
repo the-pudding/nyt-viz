@@ -50,7 +50,30 @@ function joinWordsToArticles(formattedArticleData, wordCloudData) {
 }
 
 
+function joinWordsAndYearsToArticles(areaChartData, formattedArticleData) {
+	// console.log(areaChartData)
+	// console.log(formattedArticleData)
+	let i = 0;
+	for (i; i < areaChartData.length; i++) {
+
+		let decade = areaChartData[i].year
+		let word = areaChartData[i].word
+
+		const relevantArticles = formattedArticleData.filter(article => (article.decade === decade) && (article.term === word))
+		areaChartData[i].articles = relevantArticles;
+	}
+	return areaChartData
+}
+
+
 function joinWordsToFrequencies(areaChartData, wordCloudData) {
+	return wordCloudData.map(decade => ({
+		...decade,
+		areaData: areaChartData
+	}))
+}
+
+function joinWordsYearsToArticles(areaChartData, wordCloudData) {
 	return wordCloudData.map(decade => ({
 		...decade,
 		areaData: areaChartData
@@ -62,5 +85,6 @@ export default {
 	nestWordCloudDataByYear,
 	joinWordsToArticles,
 	joinWordsToFrequencies,
+	joinWordsAndYearsToArticles,
 	formatArticles
 }

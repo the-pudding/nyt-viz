@@ -8,6 +8,7 @@ import enterView from 'enter-view';
 
 // data
 let areaChartData;
+let areaChartDataWithArticles;
 let wordCloudDataRaw;
 let wordCloudDataFiltered;
 let wordCloudDataNested;
@@ -63,11 +64,15 @@ function loadData() {
 
 				// Loading+formatting article data
 				exampleArticleData = response[2];
-				console.log(exampleArticleData)
 				formattedArticleData = cleanData.formatArticles(exampleArticleData);
 
 				// Joining articles to word decades
 				wordCloudDataJoined = cleanData.joinWordsToArticles(formattedArticleData, wordCloudDataAreaData);
+
+
+				areaChartDataWithArticles = cleanData.joinWordsAndYearsToArticles(areaChartData, formattedArticleData)
+
+
 
 			}
 		})
@@ -76,7 +81,7 @@ function loadData() {
 
 function setUpFreqChart() {
 	wordArea = $freqChart
-		.datum(areaChartData)
+		.datum(areaChartDataWithArticles)
 		.puddingChartArea()
 }
 

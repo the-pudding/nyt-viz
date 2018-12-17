@@ -13,6 +13,8 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 	function createChart(el) {
 		const $sel = d3.select(el);
 		let data = $sel.datum();
+
+
 		// dimension stuff
 		let width = 0;
 		let height = 0;
@@ -29,6 +31,9 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 		let $svg = null;
 		let $axis = null;
 		let $vis = null;
+		let $sidebar = null;
+		let $sidebarHedsConstant = null;
+		let $sidebarHedsTemp = null;
 		let xScale = d3.scaleLinear();
 		let xAxis = null;
 		let xAxisGroup = null;
@@ -95,6 +100,36 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			const d1 = currWordData[i]
 			const e = x0 - d0.year > d1.year - x0 ? d1 : d0
 
+
+
+			console.log(e.articles) // accessing these articles; just need to insert them into examples of heds up top.	
+
+			d3.selectAll('div.headline').remove()
+
+			const $heds = $sidebar.select('.headline-wrapper')
+				.selectAll('div.headline')
+				.data(e.articles)
+				.enter()
+				.append('div.headline')
+
+			$heds.append('p.hed-num tk-national')
+				.text((d, i) => i + 1)
+
+			$heds.append('p.hed-text')
+				.html(example => {
+					const currentWord = example.term
+					const exampleYear = example.year.slice(0, 4)
+					let lowerPara = example.headline_russell.toLowerCase();
+					const findLength = currentWord.length
+					const stringdIndex = lowerPara.indexOf(currentWord.toLowerCase());
+					const endIndex = stringdIndex + findLength;
+					let editedPara = '<span class="year-example">' + exampleYear + '</span>' + ': ' + example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
+					return editedPara.slice(0, 100) + '...'
+				})
+				.on('click', example => window.open(example.web_url))
+
+
+			//
 			const moveX = xScale(e.year)
 			const moveY = yScale(e.frequency)
 
@@ -115,7 +150,13 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 			init() {
 				nestData()
 				const initData = dataByWord.filter(d => d.key === 'boer')
-				maxY = d3.max(initData, function (d) { return d.maxFreq; });
+				// console.log(initData)
+
+				maxY = d3.max(initData, function (d) {
+					return d.maxFreq;
+				});
+
+				$sidebar = d3.select('div.sidebar')
 
 				$svg = $sel.append('svg.pudding-chart');
 				const $g = $svg.append('g');
@@ -170,8 +211,12 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 				axisPadding = height;
 
 
-				let maxX = d3.max(data, function (d) { return d.year; });
-				let minX = d3.min(data, function (d) { return d.year; });
+				let maxX = d3.max(data, function (d) {
+					return d.year;
+				});
+				let minX = d3.min(data, function (d) {
+					return d.year;
+				});
 
 
 				xScale = d3
@@ -229,23 +274,31 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.on('mouseout', () => tooltip.st('display', 'none'))
 					.on('mousemove touchstart', handleMouseMove)
 
-									drawLine = d3.line()
-						.defined(function (d) { return d; })
-						.x(function (d) { return xScale(d.year); })
-						.y(function (d) { return yScale(d.frequency); })
+				drawLine = d3.line()
+					.defined(d => d)
+					.x(d => xScale(d.year))
+					.y(d => yScale(d.frequency))
 
-					wordLine
-						.attr("d", function (d) { return drawLine(d.values); })
+				wordLine
+					.attr("d", function (d) {
+						return drawLine(d.values);
+					})
 
-					// define the area
-					drawArea = d3.area()
-						.defined(drawLine.defined())
-						.x(function (d) { return xScale(d.year); })
-						.y0(height)
-						.y1(function (d) { return yScale(d.frequency); });
+				// define the area
+				drawArea = d3.area()
+					.defined(drawLine.defined())
+					.x(function (d) {
+						return xScale(d.year);
+					})
+					.y0(height)
+					.y1(function (d) {
+						return yScale(d.frequency);
+					});
 
-					wordAreas
-						.attr("d", function (d) { return drawArea(d.values); })
+				wordAreas
+					.attr("d", function (d) {
+						return drawArea(d.values);
+					})
 
 				return Chart;
 			},
