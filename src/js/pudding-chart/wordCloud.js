@@ -49,7 +49,11 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const $mentions = $articlesBox.select('p.mentions').select('.mentioned-span')
 		const $word = $articlesBox.select('p.mentions').select('.word-span')
 
+		//Boer check
+		let isBoer;
+
 		// helper functions
+
 
 		// function boldString(str, find, bufferChars) {
 		// 	const re = new RegExp(find, 'g');
@@ -114,7 +118,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			const decadeOverindex = d.overindex.toString().slice(0, 3);
 			const relevantArticleData = shuffle(articles.filter(row => (row.term === wordCloudWord) && (row.decade === currentYear)).slice(0, 3))
 
-			console.log(relevantArticleData)
+			// console.log(relevantArticleData)
 			//highlight clicked word
 			d3.selectAll('.word').classed('clickedWord', false)
 			const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
@@ -168,7 +172,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					decadeString: `dec_${word.year}`
 				}))
 
-			areaChartRef.update(wordCloudWord)
+			//check if areaChartRef object exists; if it doesn't, don't update chart (for default view)
+			areaChartRef ? areaChartRef.update(wordCloudWord) : null;
 
 			const $sidebar = d3.select('.sidebar');
 			const $toggle = d3.select('.drawer__toggle');
@@ -192,6 +197,15 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
 				.on('click', handleWordClick)
+
+			const isBoer = words.filter(word => word.word === 'boer')[0]
+
+			console.log(isBoer)
+			if (isBoer) {
+				handleWordClick(isBoer)
+			}
+
+
 
 		}
 
