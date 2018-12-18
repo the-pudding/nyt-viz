@@ -102,7 +102,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 
 
-			console.log(e.articles) // accessing these articles; just need to insert them into examples of heds up top.	
+			console.log(e.articles) // accessing these articles; just need to insert them into examples of heds up top.
 
 			d3.selectAll('div.headline').remove()
 
@@ -263,6 +263,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				tooltip = $svg.append('g').at('class', 'g-tooltip').st('display', 'none')
 				tooltip.append('circle').at('class', 'tooltip-circle').at('r', 5).at('transform', 'translate(' + marginLeft + ',' + marginTop + ')')
+				tooltip.append('text').at('class', 'tooltip-text tooltip-bg').at('dy', 20)
 				tooltip.append('text').at('class', 'tooltip-text').at('dy', 20)
 
 				$svg.append('rect')
