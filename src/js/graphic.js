@@ -35,10 +35,10 @@ function resize() {
 
 function loadData() {
 	return new Promise((resolve, reject) => {
-		const filePath__Timelines = './assets/data/word_timelines.csv'
-		const filePath__WordCloud = './assets/data/word_cloud_data.csv'
-		const filePath__ExampleArticles = './assets/data/term_article_pairs_overall.csv'
-		const filePath__WordsToInclude = './assets/data/word_cloud_data_to_include.csv'
+		const filePath__Timelines = 'assets/data/word_timelines.csv'
+		const filePath__WordCloud = 'assets/data/word_cloud_data.csv'
+		const filePath__ExampleArticles = 'assets/data/term_article_pairs_overall.csv'
+		const filePath__WordsToInclude = 'assets/data/word_cloud_data_to_include.csv'
 
 		const allFiles = [filePath__Timelines, filePath__WordCloud, filePath__ExampleArticles, filePath__WordsToInclude]
 
