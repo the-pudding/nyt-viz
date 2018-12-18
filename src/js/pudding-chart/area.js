@@ -281,25 +281,17 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.y(d => yScale(d.frequency))
 
 				wordLine
-					.attr("d", function (d) {
-						return drawLine(d.values);
-					})
+					.attr("d", d => drawLine(d.values))
 
 				// define the area
 				drawArea = d3.area()
 					.defined(drawLine.defined())
-					.x(function (d) {
-						return xScale(d.year);
-					})
+					.x(d => xScale(d.year))
 					.y0(height)
-					.y1(function (d) {
-						return yScale(d.frequency);
-					});
+					.y1(d => yScale(d.frequency))
 
 				wordAreas
-					.attr("d", function (d) {
-						return drawArea(d.values);
-					})
+					.attr("d", d => drawArea(d.values))
 
 				return Chart;
 			},
