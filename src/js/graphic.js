@@ -69,11 +69,7 @@ function loadData() {
 				// Joining articles to word decades
 				wordCloudDataJoined = cleanData.joinWordsToArticles(formattedArticleData, wordCloudDataAreaData);
 
-
 				areaChartDataWithArticles = cleanData.joinWordsAndYearsToArticles(areaChartData, formattedArticleData)
-
-
-
 			}
 		})
 	})
