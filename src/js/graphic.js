@@ -62,6 +62,7 @@ function loadData() {
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(wordCloudDataFiltered);
 
 				wordCloudDataAreaData = cleanData.joinWordsToFrequencies(areaChartData, wordCloudDataNested)
+				console.log(wordCloudDataNested)
 
 				// Loading+formatting article data
 				exampleArticleData = response[2];
@@ -71,6 +72,8 @@ function loadData() {
 				wordCloudDataJoined = cleanData.joinWordsToArticles(formattedArticleData, wordCloudDataAreaData);
 
 				areaChartDataWithArticles = cleanData.joinWordsAndYearsToArticles(areaChartData, formattedArticleData)
+
+				// console.log(wordCloudDataJoined)
 			}
 		})
 	})
@@ -127,8 +130,8 @@ function showDrawer() {
 
 function scrollTo(element) {
 	jump(element, {
-	  duration: 1000,
-	  offset: -100
+		duration: 1000,
+		offset: -100
 	})
 }
 

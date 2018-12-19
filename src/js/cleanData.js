@@ -26,7 +26,7 @@ function nestWordCloudDataByYear(data) {
 				overindex: +term.overindex,
 				wordOriginal: term.word,
 				word: term.word
-			}))
+			})).slice(0, 10)
 		}))
 	return nestedDataTyped;
 }
