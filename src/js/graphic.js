@@ -5,6 +5,7 @@ import cleanData from './cleanData';
 import './pudding-chart/area'
 import './pudding-chart/wordcloud';
 import enterView from 'enter-view';
+import jump from 'jump.js';
 
 // data
 let areaChartData;
@@ -96,16 +97,15 @@ function handleNavSelection() {
 			const matchingNav = d3.select(`.decade-${cloudDecade}`)
 			d3.selectAll('.decade').classed('current', false)
 			matchingNav.classed('current', true)
-			el.classList.add('entered');
 		},
 		exit: function (el) {
 			const cloudDecade = el.classList[1].split('-')[1]
-			const matchingNav = d3.select(`.decade-${cloudDecade}`)
+			const prev = Math.max(1900, cloudDecade - 10)
+			const matchingNav = d3.select(`.decade-${prev}`)
 			d3.selectAll('.decade').classed('current', false)
 			matchingNav.classed('current', true)
-			el.classList.remove('entered');
 		},
-		offset: 0.75, // enter at middle of viewport
+		offset: 0.7, // enter at middle of viewport
 		once: false, // trigger every time
 	});
 }
@@ -126,16 +126,10 @@ function showDrawer() {
 }
 
 function scrollTo(element) {
-	const h = window.innerHeight
-	const elHeight = element.clientHeight
-	const offset = element.offsetTop
-	console.log(h, elHeight, offset)
-	console.log((elHeight * 2) + offset)
-	window.scroll({
-		behavior: 'smooth',
-		left: 0,
-		top: (elHeight * 3.6) + offset
-	});
+	jump(element, {
+	  duration: 1000,
+	  offset: -100
+	})
 }
 
 function handleNavClick() {
@@ -143,7 +137,6 @@ function handleNavClick() {
 	decades
 		.on('click', function () {
 			const decadeClick = d3.select(this).text().split('s')[0]
-			console.log(decadeClick)
 			const el = d3.select(`.wordcloud-${decadeClick}`).node()
 			scrollTo(el);
 		})

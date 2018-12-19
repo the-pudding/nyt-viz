@@ -3,6 +3,7 @@
 	padding-top 3rem
 	width 95%
 	margin 0 auto
+	max-width 1000px
 
 	&__img
 		width 100%
@@ -137,3 +138,30 @@
 			max-width 40rem
 			margin 0 auto
 			padding 0 1rem
+
+	.tease-link
+		max-width 40rem
+		position relative
+		margin 0 auto
+		padding 0 1rem
+		&:before
+			position absolute
+			width 3rem
+			color darken($dark-tan, 30)
+			content '•••'
+			set-type-size(xxx-small)
+			letter-spacing 4px
+			left 50%
+
+		p
+			font-family $national
+			font-weight 500
+			set-type-size('medium', true)
+			color darken($dark-tan, 30)
+			padding 2rem 0
+
+		a
+			color darken($dark-tan, 30)
+			font-weight 700
+			&:hover
+				color $off-black

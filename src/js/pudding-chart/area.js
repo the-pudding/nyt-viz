@@ -102,7 +102,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 
 
-			console.log(e.articles) // accessing these articles; just need to insert them into examples of heds up top.	
+			console.log(e.articles) // accessing these articles; just need to insert them into examples of heds up top.
 
 			d3.selectAll('div.headline').remove()
 
@@ -263,6 +263,7 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 
 				tooltip = $svg.append('g').at('class', 'g-tooltip').st('display', 'none')
 				tooltip.append('circle').at('class', 'tooltip-circle').at('r', 5).at('transform', 'translate(' + marginLeft + ',' + marginTop + ')')
+				tooltip.append('text').at('class', 'tooltip-text tooltip-bg').at('dy', 20)
 				tooltip.append('text').at('class', 'tooltip-text').at('dy', 20)
 
 				$svg.append('rect')
@@ -280,25 +281,17 @@ d3.selection.prototype.puddingChartArea = function init(options) {
 					.y(d => yScale(d.frequency))
 
 				wordLine
-					.attr("d", function (d) {
-						return drawLine(d.values);
-					})
+					.attr("d", d => drawLine(d.values))
 
 				// define the area
 				drawArea = d3.area()
 					.defined(drawLine.defined())
-					.x(function (d) {
-						return xScale(d.year);
-					})
+					.x(d => xScale(d.year))
 					.y0(height)
-					.y1(function (d) {
-						return yScale(d.frequency);
-					});
+					.y1(d => yScale(d.frequency))
 
 				wordAreas
-					.attr("d", function (d) {
-						return drawArea(d.values);
-					})
+					.attr("d", d => drawArea(d.values))
 
 				return Chart;
 			},
