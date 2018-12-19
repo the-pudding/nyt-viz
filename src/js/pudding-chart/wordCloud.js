@@ -129,7 +129,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			const decadeOverindex = d.overindex.toString().slice(0, 3);
 			const relevantArticleData = shuffle(articles.filter(row => (row.term === wordCloudWord) && (row.decade === currentYear)).slice(0, 3))
 
-			// console.log(relevantArticleData)
 			//highlight clicked word
 			d3.selectAll('.word').classed('clickedWord', false)
 			const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
@@ -230,7 +229,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const Chart = {
 			// called once at start
 			init() {
-				isMob = isMobile.any();
+
 
 
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
@@ -252,13 +251,12 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				const initWord = d3.selectAll(`[data-attribute="boer"]`)
 				initWord.classed('clickedWord', true)
 
-				// createCloudLayout(width, height, tags)
-
 				Chart.render();
 			},
 			// on resize, update new dimensions
 			resize() {
 				// defaults to grabbing dimensions from container element
+				isMob = isMobile.any();
 
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
 				// height = $sel.node().offsetHeight - marginTop - marginBottom;
