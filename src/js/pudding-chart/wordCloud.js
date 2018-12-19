@@ -16,6 +16,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const tags = data.values;
 		const articles = data.articles
 		const wordFrequencies = data.areaData;
+		let isMob;
 
 
 		// console.log(articles)
@@ -27,12 +28,13 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const marginBottom = 5;
 		const marginLeft = 5;
 		const marginRight = 5;
+		let resizeNum = 0;
 
 		// scales
 		const scaleX = null;
 		const scaleY = null;
 		let yScale = d3.scaleLinear();
-		const fontSize = d3.scaleSqrt().range([20, 50]);
+		const fontSize = d3.scaleSqrt();
 
 		let drawLine = null;
 		let drawArea = null;
@@ -51,20 +53,33 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 		// helper functions
 
-		// function boldString(str, find, bufferChars) {
-		// 	const re = new RegExp(find, 'g');
-		// 	let editedString = str.replace(re, '<b>' + find + '</b>');
+		function showDefaultArticles(isBoer) {
+			if (isBoer) {
+				handleWordClick(isBoer)
+			}
 
-		// 	const findLength = find.length
-		// 	const stringdIndex = editedString.indexOf(find);
+		}
 
-		// 	const startIndex = stringdIndex - bufferChars;
-		// 	const endIndex = stringdIndex + findLength + bufferChars;
+		const isMobile = {
+			android: () => navigator.userAgent.match(/Android/i),
 
-		// 	editedString = editedString.slice(startIndex, endIndex)
+			blackberry: () => navigator.userAgent.match(/BlackBerry/i),
 
-		// 	return editedString;
-		// }
+			ios: () => navigator.userAgent.match(/iPhone|iPad|iPod/i),
+
+			opera: () => navigator.userAgent.match(/Opera Mini/i),
+
+			windows: () => navigator.userAgent.match(/IEMobile/i),
+
+			any: () => (
+				isMobile.android() ||
+				isMobile.blackberry() ||
+				isMobile.ios() ||
+				isMobile.opera() ||
+				isMobile.windows()
+			),
+		}
+
 
 		function shuffle(array) {
 			var currentIndex = array.length,
@@ -90,12 +105,13 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 			const layout = d3.layout.cloud()
 				.timeInterval(Infinity)
-				.size([width - (2 * marginLeft), height - (2 * marginTop)])
+				// .size([width - (2 * marginLeft), height - (2 * marginTop)])
+				.size([width, height])
 				.words(data)
-				.padding(8)
+				// .padding(8)
+				.padding(15)
 				.rotate(() => 0)
 				.fontSize((d, i) => fontSize(d.overindex))
-				// .fontSize((d, i) => fontSize(Math.random()))
 				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
@@ -114,7 +130,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			const decadeOverindex = d.overindex.toString().slice(0, 3);
 			const relevantArticleData = shuffle(articles.filter(row => (row.term === wordCloudWord) && (row.decade === currentYear)).slice(0, 3))
 
-			console.log(relevantArticleData)
 			//highlight clicked word
 			d3.selectAll('.word').classed('clickedWord', false)
 			const clickedWord = d3.selectAll(`[data-attribute="${wordCloudWord}"]`)
@@ -168,7 +183,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					decadeString: `dec_${word.year}`
 				}))
 
-			areaChartRef.update(wordCloudWord)
+			//check if areaChartRef object exists; if it doesn't, don't update chart (for default view)
+			areaChartRef ? areaChartRef.update(wordCloudWord) : null;
 
 			const $sidebar = d3.select('.sidebar');
 			const $toggle = d3.select('.drawer__toggle');
@@ -178,20 +194,34 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		}
 
 		function draw(words) {
-			$wordcloud.selectAll("text")
+
+			const word = $wordcloud.selectAll("text")
 				.data(words)
+
+			const wordEnter = word
 				.enter()
 				.append('text')
 				.at('class', 'word')
 				.at('data-attribute', d => d.word)
-				.style('font-size', d => `${d.size}px`)
 				.at('text-anchor', 'middle')
-				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
 				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
 				.on('click', handleWordClick)
+
+			const wordMerge = wordEnter.merge(word)
+
+			wordMerge
+				.style('font-size', d => `${d.size}px`)
+				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
+
+
+
+			const isBoer = words.filter(word => word.word === 'boer')[0]
+
+			showDefaultArticles(isBoer);
+
 
 		}
 
@@ -200,6 +230,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const Chart = {
 			// called once at start
 			init() {
+
+
+
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
 				$wordcloud = $svg.append("g").at('class', d => `word-cloud ${d.key}`)
 
@@ -219,21 +252,28 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				const initWord = d3.selectAll(`[data-attribute="boer"]`)
 				initWord.classed('clickedWord', true)
 
-				createCloudLayout(width, height, tags)
-
 				Chart.render();
 			},
 			// on resize, update new dimensions
 			resize() {
 				// defaults to grabbing dimensions from container element
-				width = $sel.node().offsetWidth - marginLeft - marginRight;
+				isMob = isMobile.any();
 
-				height = $sel.node().offsetHeight - marginTop - marginBottom;
+				width = $sel.node().offsetWidth - marginLeft - marginRight;
+				// height = $sel.node().offsetHeight - marginTop - marginBottom;
+				height = width;
+
+				if (isMob) {
+					fontSize.range([10, 15])
+				} else {
+					fontSize.range([20, 50])
+				}
 
 				$svg.at({
 					width: width + marginLeft + marginRight,
 					height: height + marginTop + marginBottom
 				});
+
 
 				$wordcloud
 					.at("transform", `translate(${width / 2},${height / 2})`);
