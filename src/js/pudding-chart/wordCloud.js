@@ -105,7 +105,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 			const layout = d3.layout.cloud()
 				.timeInterval(Infinity)
-				.size([width - (2 * marginLeft), height - (2 * marginTop)])
+				// .size([width - (2 * marginLeft), height - (2 * marginTop)])
+				.size([width, height])
 				.words(data)
 				// .padding(8)
 				.padding(15)
@@ -263,7 +264,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				height = width;
 
 				if (isMob) {
-					fontSize.range([20, 20])
+					fontSize.range([10, 15])
 				} else {
 					fontSize.range([20, 50])
 				}
