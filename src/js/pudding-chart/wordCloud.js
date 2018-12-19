@@ -183,6 +183,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					let editedPara = '<span class="year-example">' + exampleYear + '</span>' + ': ' + example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
 					return editedPara.slice(0, 100) + '...'
 				})
+				.on('click', example => window.open(example.web_url))
 
 
 
