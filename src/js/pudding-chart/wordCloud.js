@@ -28,6 +28,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const marginLeft = 5;
 		const marginRight = 5;
 		let resizeNum = 0;
+		let isMob = false;
 
 		// scales
 		const scaleX = null;
@@ -229,6 +230,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
 
+				isMob = width < 800 ? true : false;
+
+				console.log(width)
 
 				resizeNum += 1;
 
