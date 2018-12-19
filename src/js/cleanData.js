@@ -5,8 +5,6 @@ function filterWordCloud(wordCloudData, filterArray) {
 	}
 	const filteredWordCloudData = wordCloudData.filter(cloudWord => includedWords.includes(cloudWord.word))
 
-	//console.log(filteredWordCloudData)
-
 	return filteredWordCloudData;
 
 }
@@ -26,7 +24,7 @@ function nestWordCloudDataByYear(data) {
 				overindex: +term.overindex,
 				wordOriginal: term.word,
 				word: term.word
-			}))
+			})).slice(0, 10)
 		}))
 	return nestedDataTyped;
 }

@@ -18,20 +18,22 @@
 		</a> &
 		<a href='{{meta.author2.url}}' target='_blank'>
 			<strong>{{meta.author2.name}}</strong>
-		</a>, illustration by <body>
-		<a href='{{meta.illustrator.url}}' target='_blank'>
-			<strong>{{meta.illustrator.name}}</strong>
-		</a>
+		</a>, illustration by
+
+		<body>
+			<a href='{{meta.illustrator.url}}' target='_blank'>
+				<strong>{{meta.illustrator.name}}</strong>
+			</a>
 		</body>
 	</p>
 	<div class='prose'>
 		{{#each doc.intro}}
-			<p>{{{value}}}</p>
+		<p>{{{value}}}</p>
 		{{/each}}
 	</div>
 	<div class='tease-link'>
 		{{#each doc.tease-link}}
-			<p>{{{value}}}</p>
+		<p>{{{value}}}</p>
 		{{/each}}
 	</div>
 </div>

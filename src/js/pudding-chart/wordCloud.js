@@ -17,6 +17,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const articles = data.articles
 		const wordFrequencies = data.areaData;
 		let isMob;
+		let layout;
 
 
 		// console.log(articles)
@@ -35,6 +36,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const scaleY = null;
 		let yScale = d3.scaleLinear();
 		const fontSize = d3.scaleSqrt();
+		let wordPadding = null;
+		// const fontSize = d3.scaleLinear();
 
 		let drawLine = null;
 		let drawArea = null;
@@ -44,7 +47,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		let $svg = null;
 		let $wordcloud = null;
 		let $axis = null;
-		let $vis = null;
 		const $articlesBox = d3.select('.sidebar');
 		const $headlineContainer = $articlesBox.select('div.headline-wrapper')
 		const $areaChartContainer = $articlesBox.select('div.chart-wrapper')
@@ -59,6 +61,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			}
 
 		}
+
 
 		const isMobile = {
 			android: () => navigator.userAgent.match(/Android/i),
@@ -80,6 +83,13 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			),
 		}
 
+		function setFontSizeRange() {
+			if (isMob) {
+				fontSize.range([10, 20])
+			} else {
+				fontSize.range([20, 50])
+			}
+		}
 
 		function shuffle(array) {
 			var currentIndex = array.length,
@@ -103,25 +113,26 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				return d.overindex;
 			}))
 
-			const layout = d3.layout.cloud()
+			layout = d3.layout.cloud()
 				.timeInterval(Infinity)
-				// .size([width - (2 * marginLeft), height - (2 * marginTop)])
-				.size([width, height])
-				.words(data)
+				.size([width - (2 * marginLeft), height - (2 * marginTop)])
+				// .size([width, height])
+				// .words(data)
 				// .padding(8)
-				.padding(15)
+				.padding(wordPadding)
 				.rotate(() => 0)
 				.font('Impact')
+				// .font('National 2 Narrow Web')
+				// .font('Tiempos Text Web')
+				// .font('Arial')
 				.spiral("rectangular")
-				.fontSize((d, i) => fontSize(d.overindex))
+				.fontSize(d => fontSize(d.overindex))
 				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
 				.on("end", draw)
-				.start()
 
-			return layout;
 		}
 
 
@@ -172,6 +183,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					let editedPara = '<span class="year-example">' + exampleYear + '</span>' + ': ' + example.headline_russell.slice(0, stringdIndex) + '<b>' + example.headline_russell.slice(stringdIndex, endIndex) + '</b>' + example.headline_russell.slice(endIndex);
 					return editedPara.slice(0, 100) + '...'
 				})
+				.on('click', example => window.open(example.web_url))
 
 
 
@@ -194,7 +206,13 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			$toggle.classed('is-visible', !visible);
 		}
 
-		function draw(words) {
+		function draw(words, bounds) {
+
+			let scale = bounds ? Math.min(
+				width / Math.abs(bounds[1].x - width / 2),
+				width / Math.abs(bounds[0].x - width / 2),
+				height / Math.abs(bounds[1].y - height / 2),
+				height / Math.abs(bounds[0].y - height / 2)) / 2 : 1;
 
 			const word = $wordcloud.selectAll("text")
 				.data(words)
@@ -214,10 +232,15 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			const wordMerge = wordEnter.merge(word)
 
 			wordMerge
-				.style('font-size', d => `${d.size}px`)
+				.transition()
+				.delay(1000)
+				.st('font-size', d => `${d.size}px`)
+				// .style("font-family", d => d.font)
+				// .st('font-family', 'Tiempos Text Web')
 				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
 
-
+			$wordcloud
+				.at("transform", "translate(" + [width >> 1, height >> 1] + ")scale(" + scale + ")");
 
 			const isBoer = words.filter(word => word.word === 'boer')[0]
 
@@ -232,8 +255,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			// called once at start
 			init() {
 
-
-
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
 				$wordcloud = $svg.append("g").at('class', d => `word-cloud ${d.key}`)
 
@@ -245,9 +266,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				// create axis
 				$axis = $svg.append('g.g-axis');
 
-				// setup viz group
-				$vis = $g.append('g.g-vis');
-
 				Chart.resize();
 
 				const initWord = d3.selectAll(`[data-attribute="boer"]`)
@@ -257,18 +275,19 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 			},
 			// on resize, update new dimensions
 			resize() {
+
 				// defaults to grabbing dimensions from container element
 				isMob = isMobile.any();
+				setFontSizeRange()
+				wordPadding = isMob ? (fontSize.range()[0] / 2) : 15;
+
+				console.log(wordPadding)
 
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
 				// height = $sel.node().offsetHeight - marginTop - marginBottom;
-				height = width;
+				height = width / 1.5;
 
-				if (isMob) {
-					fontSize.range([10, 30])
-				} else {
-					fontSize.range([20, 50])
-				}
+				$wordcloud.at("transform", "translate(" + [width >> 1, height >> 1] + ")");
 
 				$svg.at({
 					width: width + marginLeft + marginRight,
@@ -280,6 +299,8 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 					.at("transform", `translate(${width / 2},${height / 2})`);
 
 				createCloudLayout(width, height, tags)
+
+				layout.stop().words(tags).start()
 
 				return Chart;
 			},
