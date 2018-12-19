@@ -29,7 +29,7 @@ const $wordCloudContainers = d3.selectAll('.wordcloud-wrapper')
 
 function resize() {
 
-	//wordCloudCharts.forEach(chart => chart.resize())
+	wordCloudCharts.forEach(chart => chart.resize())
 
 	wordArea.resize()
 }
