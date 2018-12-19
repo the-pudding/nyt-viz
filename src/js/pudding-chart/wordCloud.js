@@ -111,7 +111,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				// .padding(8)
 				.padding(15)
 				.rotate(() => 0)
-				.font('Tiempos Text Web')
 				.fontSize((d, i) => fontSize(d.overindex))
 				.text(d => d.word.toLowerCase()
 					.split(' ')
