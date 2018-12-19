@@ -16,6 +16,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const tags = data.values;
 		const articles = data.articles
 		const wordFrequencies = data.areaData;
+		let isMob;
 
 
 		// console.log(articles)
@@ -33,7 +34,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const scaleX = null;
 		const scaleY = null;
 		let yScale = d3.scaleLinear();
-		const fontSize = d3.scaleSqrt().range([20, 50]);
+		const fontSize = d3.scaleSqrt();
 
 		let drawLine = null;
 		let drawArea = null;
@@ -57,6 +58,26 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				handleWordClick(isBoer)
 			}
 
+		}
+
+		const isMobile = {
+			android: () => navigator.userAgent.match(/Android/i),
+
+			blackberry: () => navigator.userAgent.match(/BlackBerry/i),
+
+			ios: () => navigator.userAgent.match(/iPhone|iPad|iPod/i),
+
+			opera: () => navigator.userAgent.match(/Opera Mini/i),
+
+			windows: () => navigator.userAgent.match(/IEMobile/i),
+
+			any: () => (
+				isMobile.android() ||
+				isMobile.blackberry() ||
+				isMobile.ios() ||
+				isMobile.opera() ||
+				isMobile.windows()
+			),
 		}
 
 
@@ -209,6 +230,9 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const Chart = {
 			// called once at start
 			init() {
+				isMob = isMobile.any();
+
+
 				$svg = $svgContainer.append('svg').at('class', d => `word-cloud__chart ${d.key}`)
 				$wordcloud = $svg.append("g").at('class', d => `word-cloud ${d.key}`)
 
@@ -240,8 +264,11 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				// height = $sel.node().offsetHeight - marginTop - marginBottom;
 				height = width;
 
-				resizeNum += 1;
-
+				if (isMob) {
+					fontSize.range([10, 20])
+				} else {
+					fontSize.range([20, 50])
+				}
 
 				$svg.at({
 					width: width + marginLeft + marginRight,
