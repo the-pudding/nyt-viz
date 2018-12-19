@@ -26,7 +26,12 @@
 	</p>
 	<div class='prose'>
 		{{#each doc.intro}}
-		<p>{{{value}}}</p>
+			<p>{{{value}}}</p>
+		{{/each}}
+	</div>
+	<div class='tease-link'>
+		{{#each doc.tease-link}}
+			<p>{{{value}}}</p>
 		{{/each}}
 	</div>
 </div>
