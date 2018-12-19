@@ -5,8 +5,6 @@ function filterWordCloud(wordCloudData, filterArray) {
 	}
 	const filteredWordCloudData = wordCloudData.filter(cloudWord => includedWords.includes(cloudWord.word))
 
-	//console.log(filteredWordCloudData)
-
 	return filteredWordCloudData;
 
 }

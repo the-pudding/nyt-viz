@@ -149,6 +149,8 @@ function setupSidebarDrawer() {
 	const $sidebar = d3.select('.sidebar');
 	const $toggle = d3.select('.drawer__toggle');
 
+	$sidebar.classed('is-visible', false);
+
 	$toggle.on('click', () => {
 		const visible = $sidebar.classed('is-visible');
 		$sidebar.classed('is-visible', !visible);

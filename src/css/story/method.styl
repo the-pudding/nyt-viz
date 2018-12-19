@@ -1,18 +1,28 @@
 .method
 	margin 0 auto
-	padding 4rem 1rem 1.5rem 1rem
+	padding 1rem 1rem 6rem 1rem
 	
-
 	&__title
 		max-width $column-width
 		margin 0 auto
-		padding-top 1.5rem
+		padding 1.5rem 1rem 0 1rem 
 		text-align center
-		font-weight 600
-		font-family 'National 2 Narrow Web'
+		font-weight 700
+		font-family $national
+		position relative 
+		&:before
+			position absolute
+			width 3rem
+			color darken($dark-tan, 30)
+			content '•••'
+			set-type-size(xxx-small)
+			letter-spacing 4px
+			left calc(50% - 1.5rem)
+			top -1rem
 
 	&__copy
-		font-family 'Tiempos Text Web'
+		font-family $national
+		font-weight 500
 		max-width 40rem
 		margin 0 auto
 		padding 0 1rem
