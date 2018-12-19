@@ -28,7 +28,6 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		const marginLeft = 5;
 		const marginRight = 5;
 		let resizeNum = 0;
-		let isMob = false;
 
 		// scales
 		const scaleX = null;
@@ -174,20 +173,29 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 		}
 
 		function draw(words) {
-			$wordcloud.selectAll("text")
+
+			const word = $wordcloud.selectAll("text")
 				.data(words)
+
+			const wordEnter = word
 				.enter()
 				.append('text')
 				.at('class', 'word')
 				.at('data-attribute', d => d.word)
-				.style('font-size', d => `${d.size}px`)
 				.at('text-anchor', 'middle')
-				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
 				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
 				.on('click', handleWordClick)
+
+			const wordMerge = wordEnter.merge(word)
+
+			wordMerge
+				.style('font-size', d => `${d.size}px`)
+				.at('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
+
+
 
 			const isBoer = words.filter(word => word.word === 'boer')[0]
 
@@ -220,7 +228,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				const initWord = d3.selectAll(`[data-attribute="boer"]`)
 				initWord.classed('clickedWord', true)
 
-				createCloudLayout(width, height, tags)
+				// createCloudLayout(width, height, tags)
 
 				Chart.render();
 			},
@@ -229,38 +237,22 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				// defaults to grabbing dimensions from container element
 
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
-
-				isMob = width < 800 ? true : false;
-
-				console.log(width)
+				// height = $sel.node().offsetHeight - marginTop - marginBottom;
+				height = width;
 
 				resizeNum += 1;
 
-				if (resizeNum <= 1) {
-					height = $sel.node().offsetHeight - marginTop - marginBottom;
-					$svg.at({
-						width: width + marginLeft + marginRight,
-						height: height + marginTop + marginBottom
-					});
 
-					$wordcloud
-						.at("transform", `translate(${width / 2},${height / 2})`);
-
-				} else {
-					$svg.at({
-						width: width + marginLeft + marginRight,
-						// height: height + marginTop + marginBottom
-					})
+				$svg.at({
+					width: width + marginLeft + marginRight,
+					height: height + marginTop + marginBottom
+				});
 
 
-					$wordcloud
-						.at("transform", `translate(${width / 2},${height / 2})`);
-				}
+				$wordcloud
+					.at("transform", `translate(${width / 2},${height / 2})`);
 
-
-
-
-				// createCloudLayout(width, height, tags)
+				createCloudLayout(width, height, tags)
 
 				return Chart;
 			},
