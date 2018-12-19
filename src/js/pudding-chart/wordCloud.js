@@ -112,12 +112,12 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				.padding(15)
 				.rotate(() => 0)
 				.font('Impact')
+				.spiral("rectangular")
 				.fontSize((d, i) => fontSize(d.overindex))
 				.text(d => d.word.toLowerCase()
 					.split(' ')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(' '))
-				.spiral("rectangular")
 				.on("end", draw)
 				.start()
 
@@ -265,7 +265,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				height = width;
 
 				if (isMob) {
-					fontSize.range([10, 15])
+					fontSize.range([10, 25])
 				} else {
 					fontSize.range([20, 50])
 				}
