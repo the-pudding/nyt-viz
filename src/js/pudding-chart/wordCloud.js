@@ -281,7 +281,7 @@ d3.selection.prototype.puddingChartWordCloud = function init(options) {
 				setFontSizeRange()
 				wordPadding = isMob ? (fontSize.range()[0] / 2) : 15;
 
-				console.log(wordPadding)
+
 
 				width = $sel.node().offsetWidth - marginLeft - marginRight;
 				// height = $sel.node().offsetHeight - marginTop - marginBottom;

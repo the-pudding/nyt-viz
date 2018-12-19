@@ -3,7 +3,7 @@
   "titleA": "A brief history of the past",
   "titleB": "100 years",
   "titleC": "as told through the <i>New York Times</i> archives",
-  "description": "Brought to you by",
+  "description": "We've analyzed 120 years of New York Times headlines to find some of the most iconic events of the past century",
   "url": "https://pudding.cool/2018/12/brief-history/",
   "keywords": "tk",
   "imgFacebook": "https://pudding.cool/2018/12/brief-history/assets/social/social-facebook.jpg",
@@ -23,5 +23,5 @@
     "url": "https://maxomatic.net/",
     "twitterHandle": "@maxomatic"
   },
-  "analytics": ""
+  "analytics": "UA-90567923-1"
 }

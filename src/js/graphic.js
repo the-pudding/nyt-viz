@@ -62,7 +62,7 @@ function loadData() {
 				wordCloudDataNested = cleanData.nestWordCloudDataByYear(wordCloudDataFiltered);
 
 				wordCloudDataAreaData = cleanData.joinWordsToFrequencies(areaChartData, wordCloudDataNested)
-				console.log(wordCloudDataNested)
+
 
 				// Loading+formatting article data
 				exampleArticleData = response[2];
